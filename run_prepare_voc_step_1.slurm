@@ -20,7 +20,7 @@ module purge
 eval "$(conda shell.bash hook)"
 conda activate frust
 
-python3 datasets/pascal_voc/builtin_meta_pascal_voc.py
+python3 datasets/pascal_voc/2_gen_support_pool.py
 
 ##Log this job's resource usage stats###
 my-job-stats -a -n -s
