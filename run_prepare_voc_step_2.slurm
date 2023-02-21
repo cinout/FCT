@@ -18,7 +18,7 @@
 module purge
 
 eval "$(conda shell.bash hook)"
-conda activate frust
+conda activate fct
 
 python3 datasets/pascal_voc/2_gen_support_pool.py
 

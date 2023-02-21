@@ -18,7 +18,7 @@
 module purge
 
 eval "$(conda shell.bash hook)"
-conda activate frust
+conda activate fct
 
 python build_pvt_C4_from_official_model.py
 
