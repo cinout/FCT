@@ -2,12 +2,12 @@
 
 ###SBATCH --partition=gpu-a100
 
-###SBATCH --partition=deeplearn
-###SBATCH --qos=gpgpudeeplearn
+#SBATCH --partition=deeplearn
+#SBATCH --qos=gpgpudeeplearn
 ###SBATCH --constraint=dlg5
 
-#SBATCH --partition=feit-gpu-a100
-#SBATCH --qos=feit
+###SBATCH --partition=feit-gpu-a100
+###SBATCH --qos=feit
 
 
 
