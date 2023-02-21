@@ -19,7 +19,7 @@ MODEL:
 DATASETS:
   TRAIN: ("voc_2007_trainval_all1_5shot",)
   TEST: ("voc_2007_test_all1",)
-  TEST_KEEPCLASSES: 'all1'
+  TEST_KEEPCLASSES: "all1"
 SOLVER:
   IMS_PER_BATCH: 8
   BASE_LR: 0.00002
@@ -36,6 +36,6 @@ INPUT:
   MAX_SIZE_TRAIN: 1333
   MIN_SIZE_TEST: 600
   MAX_SIZE_TEST: 1000
-OUTPUT_DIR: './output/fsod/finetune_dir/two_branch_5shot_finetuning_pascalvoc_split1_pvt_v2_b2_li'
+OUTPUT_DIR: "./output/fsod/finetune_dir/two_branch_5shot_finetuning_pascalvoc_split1_pvt_v2_b2_li"
 TEST:
   EVAL_PERIOD: 5000
