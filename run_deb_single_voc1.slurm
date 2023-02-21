@@ -4,7 +4,7 @@
 
 #SBATCH --partition=deeplearn
 #SBATCH --qos=gpgpudeeplearn
-#SBATCH --constraint=dlg4
+#SBATCH --constraint=dlg5
 
 ###SBATCH --partition=feit-gpu-a100
 ###SBATCH --qos=feit
