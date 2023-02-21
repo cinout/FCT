@@ -12,7 +12,12 @@ This script is a simplified version of the training script in detectron2/tools.
 import os
 
 from detectron2.checkpoint import DetectionCheckpointer
-from detectron2.engine import DefaultTrainer, default_argument_parser, default_setup, launch
+from detectron2.engine import (
+    DefaultTrainer,
+    default_argument_parser,
+    default_setup,
+    launch,
+)
 
 from FCT.config import get_cfg
 from FCT.data.build import build_detection_train_loader, build_detection_test_loader
@@ -28,6 +33,7 @@ import numpy as np
 import operator
 import pickle
 import torch.utils.data
+import torch
 
 import detectron2.utils.comm as comm
 from detectron2.utils.logger import setup_logger
@@ -38,7 +44,7 @@ class Trainer(DefaultTrainer):
     def build_evaluator(cls, cfg, dataset_name, output_folder=None):
         if output_folder is None:
             output_folder = os.path.join(cfg.OUTPUT_DIR, "inference")
-        if 'coco' in dataset_name:
+        if "coco" in dataset_name:
             return COCOEvaluator(dataset_name, cfg, True, output_folder)
         else:
             return PascalVOCDetectionEvaluator(dataset_name)
@@ -88,6 +94,9 @@ def main(args):
 
 if __name__ == "__main__":
     args = default_argument_parser().parse_args()
+    print(
+        f">>>> device names: {[torch.cuda.get_device_name(i) for i in range(torch.cuda.device_count())]}",
+    )
     print("Command Line Args:", args)
     launch(
         main,
