@@ -140,7 +140,11 @@ def generate_seeds():
     for c in data_per_cat.keys():  # for each classname
         for shot in shots:  # for each shot number
             c_data = []
-            shots_c = random.sample(data_per_cat[c], shot)  # anno file paths for shots
+
+            if len(data_per_cat[c])<shot:
+                shots_c = data_per_cat[c]
+            else:
+                shots_c = random.sample(data_per_cat[c], shot)  # anno file paths for shots
 
             for s in shots_c:
                 tree = ET.parse(s)
