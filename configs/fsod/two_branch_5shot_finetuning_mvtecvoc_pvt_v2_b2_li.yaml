@@ -24,7 +24,7 @@ SOLVER:
   IMS_PER_BATCH: 8
   BASE_LR: 0.00002
   STEPS: (5000, 5000)
-  MAX_ITER: 60 # FIXME: change back to 5000
+  MAX_ITER: 5000 #FIXME:
   WARMUP_ITERS: 200
   CHECKPOINT_PERIOD: 10000
 INPUT:
@@ -36,6 +36,6 @@ INPUT:
   MAX_SIZE_TRAIN: 1333
   MIN_SIZE_TEST: 600
   MAX_SIZE_TEST: 1000
-OUTPUT_DIR: "./output/fsod/two_branch_5shot_finetuning_mvtecvoc_pvt_v2_b2_li" #FIXME:
+OUTPUT_DIR: "./output/fsod/two_branch_5shot_finetuning_mvtecvoc_pvt_v2_b2_li"
 TEST:
   EVAL_PERIOD: 5000
