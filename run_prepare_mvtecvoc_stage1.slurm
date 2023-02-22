@@ -17,7 +17,7 @@ module purge
 eval "$(conda shell.bash hook)"
 conda activate fct
 
-python3 datasets/mvtecvoc_preparation/1_prepare_mvtecvoc_few_shot.py
+python3 1_prepare_mvtecvoc_few_shot.py
 
 ##Log this job's resource usage stats###
 my-job-stats -a -n -s
