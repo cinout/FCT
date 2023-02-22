@@ -176,6 +176,7 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
                         predictions=instances
                     )
 
+                os.makedirs("test_vis_output",exist_ok=True)
                 vis_output.save(
                     os.path.join(
                         "test_vis_output", os.path.basename(input["file_name"])
