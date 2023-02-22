@@ -207,7 +207,7 @@ def crop_support(img, bbox):
 def main(split_path, split, keepclasses):
     """
     Args:
-        split_path: 'datasets/mvtecvoc/mvtecvocsplit'
+        split_path: 'datasets/mvtecvoc'
         split: "trainval"
         keepclasses: "base"
     """
@@ -226,15 +226,15 @@ def main(split_path, split, keepclasses):
     support_dict["file_path"] = []
 
     support_path = os.path.join(
-        split_path, "mvtecvoc_{}_{}".format(split, keepclasses)
+        split_path, "mvtecvocsplit", "mvtecvoc_{}_{}".format(split, keepclasses)
     )  # 'datasets/mvtecvoc/mvtecvocsplit/mvtecvoc_trainval_base'
     if not isdir(support_path):
         mkdir(support_path)
 
     box_id = 0
-    for img_id, fileid in enumerate(fileids):
-        if img_id % 100 == 0:
-            print(img_id)
+    for i, fileid in enumerate(fileids):
+        if i % 100 == 0:
+            print(i)
         anno_file = os.path.join(dirname, "Annotations", fileid + ".xml")
         jpeg_file = os.path.join(
             dirname,
@@ -272,6 +272,7 @@ def main(split_path, split, keepclasses):
                 frame_crop_base_path, "{:04d}.jpg".format(count)
             )  # we use .jpg for all images
             cv2.imwrite(file_path, support_img)
+
             support_dict["support_box"].append(support_box.tolist())
             support_dict["category_id"].append(classnames.index(cls))
             support_dict["image_id"].append(fileid)
@@ -287,11 +288,13 @@ def main(split_path, split, keepclasses):
 if __name__ == "__main__":
     split = "trainval"
     keepclasses = "base"
-    split_path = "datasets/mvtecvoc/mvtecvocsplit"
+    split_path = "datasets/mvtecvoc"
 
     since = time.time()
     support_df = main(split_path, split, keepclasses)
-    support_df.to_pickle("mvtecvoc_{}_{}.pkl".format(split, keepclasses))
+    support_df.to_pickle(
+        os.path.join(split_path, "mvtecvoc_{}_{}.pkl".format(split, keepclasses))
+    )
 
     time_elapsed = time.time() - since
     print(

@@ -207,7 +207,7 @@ def crop_support(img, bbox):
 def main(split_path, split, keepclasses, shot):
     """
     Args:
-        split_path: 'datasets/mvtecvoc/mvtecvocsplit'
+        split_path: 'datasets/mvtecvoc'
         split: "trainval"
         keepclasses: "all"
         shot: 1, 3, ...
@@ -219,7 +219,9 @@ def main(split_path, split, keepclasses, shot):
     fileids = {}
     for cls in classnames:
         with open(
-            os.path.join(split_path, "box_{}shot_{}_train.txt".format(shot, cls))
+            os.path.join(
+                split_path, "mvtecvocsplit", "box_{}shot_{}_train.txt".format(shot, cls)
+            )
         ) as f:
             fileids_ = np.loadtxt(f, dtype=np.str).tolist()
             if isinstance(fileids_, str):
@@ -238,7 +240,9 @@ def main(split_path, split, keepclasses, shot):
     support_dict["file_path"] = []
 
     support_path = os.path.join(
-        split_path, "mvtecvoc_{}_{}_{}shot".format(split, keepclasses, shot)
+        split_path,
+        "mvtecvocsplit",
+        "mvtecvoc_{}_{}_{}shot".format(split, keepclasses, shot),
     )  # e.g., 'datasets/mvtecvoc/mvtecvocsplit/mvtecvoc_trainval_all_1shot'
     if not isdir(support_path):
         mkdir(support_path)
@@ -308,7 +312,7 @@ def main(split_path, split, keepclasses, shot):
 if __name__ == "__main__":
     split = "trainval"
     keepclasses = "all"
-    split_path = "datasets/mvtecvoc/mvtecvocsplit"
+    split_path = "datasets/mvtecvoc"
 
     for shot in [1, 2, 3, 5]:  # FIXME: 10
         print(">>> keepclasses={},  shot={}".format(keepclasses, shot))
@@ -316,7 +320,10 @@ if __name__ == "__main__":
         since = time.time()
         support_df = main(split_path, split, keepclasses, shot)
         support_df.to_pickle(
-            "./mvtecvoc_{}_{}_{}shot.pkl".format(split, keepclasses, shot)
+            os.path.join(
+                split_path,
+                "./mvtecvoc_{}_{}_{}shot.pkl".format(split, keepclasses, shot),
+            )
         )
 
         time_elapsed = time.time() - since

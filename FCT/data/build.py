@@ -24,14 +24,33 @@ from detectron2.utils.env import seed_all_rng
 from detectron2.utils.logger import log_first_n
 
 from detectron2.data.catalog import DatasetCatalog, MetadataCatalog
-from detectron2.data.common import AspectRatioGroupedDataset, DatasetFromList, MapDataset
+from detectron2.data.common import (
+    AspectRatioGroupedDataset,
+    DatasetFromList,
+    MapDataset,
+)
+
 # from detectron2.data.dataset_mapper import DatasetMapper
 from FCT.data.dataset_mapper_pascal_voc import DatasetMapperWithSupportVOC
 from FCT.data.dataset_mapper_coco import DatasetMapperWithSupportCOCO
+from FCT.data.dataset_mapper_mvtecvoc import DatasetMapperWithSupportMVTECVOC
 from detectron2.data.detection_utils import check_metadata_consistency
-from detectron2.data.samplers import InferenceSampler, RepeatFactorTrainingSampler, TrainingSampler
+from detectron2.data.samplers import (
+    InferenceSampler,
+    RepeatFactorTrainingSampler,
+    TrainingSampler,
+)
 
-from detectron2.data.build import build_batch_data_loader, filter_images_with_only_crowd_annotations, load_proposals_into_dataset, filter_images_with_few_keypoints, print_instances_class_histogram, trivial_batch_collator, get_detection_dataset_dicts
+from detectron2.data.build import (
+    build_batch_data_loader,
+    filter_images_with_only_crowd_annotations,
+    load_proposals_into_dataset,
+    filter_images_with_few_keypoints,
+    print_instances_class_histogram,
+    trivial_batch_collator,
+    get_detection_dataset_dicts,
+)
+
 
 def fsod_get_detection_dataset_dicts(
     dataset_names, filter_empty=True, min_keypoints=0, proposal_files=None
@@ -47,7 +66,9 @@ def fsod_get_detection_dataset_dicts(
             that match each dataset in `dataset_names`.
     """
     assert len(dataset_names)
-    dataset_dicts_original = [DatasetCatalog.get(dataset_name) for dataset_name in dataset_names]
+    dataset_dicts_original = [
+        DatasetCatalog.get(dataset_name) for dataset_name in dataset_names
+    ]
     for dataset_name, dicts in zip(dataset_names, dataset_dicts_original):
         assert len(dicts), "Dataset '{}' is empty!".format(dataset_name)
 
@@ -56,14 +77,20 @@ def fsod_get_detection_dataset_dicts(
         # load precomputed proposals from proposal files
         dataset_dicts_original = [
             load_proposals_into_dataset(dataset_i_dicts, proposal_file)
-            for dataset_i_dicts, proposal_file in zip(dataset_dicts_original, proposal_files)
+            for dataset_i_dicts, proposal_file in zip(
+                dataset_dicts_original, proposal_files
+            )
         ]
 
-    if 'train' not in dataset_names[0]:
+    if "train" not in dataset_names[0]:
         dataset_dicts = list(itertools.chain.from_iterable(dataset_dicts_original))
     else:
-        dataset_dicts_original = list(itertools.chain.from_iterable(dataset_dicts_original))
-        dataset_dicts_original = filter_images_with_only_crowd_annotations(dataset_dicts_original)
+        dataset_dicts_original = list(
+            itertools.chain.from_iterable(dataset_dicts_original)
+        )
+        dataset_dicts_original = filter_images_with_only_crowd_annotations(
+            dataset_dicts_original
+        )
         ###################################################################################
         # split image-based annotations to instance-based annotations for few-shot learning
         dataset_dicts = []
@@ -71,35 +98,33 @@ def fsod_get_detection_dataset_dicts(
         split_flag = True
         if split_flag:
             for record in dataset_dicts_original:
-                file_name = record['file_name']
-                height = record['height']
-                width = record['width']
-                image_id = record['image_id']
-                annotations = record['annotations']
+                file_name = record["file_name"]
+                height = record["height"]
+                width = record["width"]
+                image_id = record["image_id"]
+                annotations = record["annotations"]
                 category_dict = {}
                 for ann_id, ann in enumerate(annotations):
-
                     ann.pop("segmentation", None)
                     ann.pop("keypoints", None)
 
-                    category_id = ann['category_id']
+                    category_id = ann["category_id"]
                     if category_id not in category_dict.keys():
                         category_dict[category_id] = [ann]
                     else:
                         category_dict[category_id].append(ann)
-                
+
                 for key, item in category_dict.items():
                     instance_ann = {}
-                    instance_ann['file_name'] = file_name
-                    instance_ann['height'] = height
-                    instance_ann['width'] = width
-                    instance_ann['image_id'] = image_id
+                    instance_ann["file_name"] = file_name
+                    instance_ann["height"] = height
+                    instance_ann["width"] = width
+                    instance_ann["image_id"] = image_id
 
-                    instance_ann['annotations'] = item
-                    instance_ann['annotations_full'] = copy.deepcopy(annotations)
-                    
+                    instance_ann["annotations"] = item
+                    instance_ann["annotations_full"] = copy.deepcopy(annotations)
+
                     dataset_dicts.append(instance_ann)
-
 
     has_instances = "annotations" in dataset_dicts[0]
     # Keep images without instance-level GT if the dataset has semantic labels.
@@ -117,6 +142,7 @@ def fsod_get_detection_dataset_dicts(
         except AttributeError:  # class names are not available for this dataset
             pass
     return dataset_dicts
+
 
 def build_detection_train_loader(cfg, mapper=None):
     """
@@ -141,14 +167,18 @@ def build_detection_train_loader(cfg, mapper=None):
         min_keypoints=cfg.MODEL.ROI_KEYPOINT_HEAD.MIN_KEYPOINTS_PER_IMAGE
         if cfg.MODEL.KEYPOINT_ON
         else 0,
-        proposal_files=cfg.DATASETS.PROPOSAL_FILES_TRAIN if cfg.MODEL.LOAD_PROPOSALS else None,
+        proposal_files=cfg.DATASETS.PROPOSAL_FILES_TRAIN
+        if cfg.MODEL.LOAD_PROPOSALS
+        else None,
     )
     dataset = DatasetFromList(dataset_dicts, copy=False)
-    
+
     if mapper is None:
-        if 'coco' in cfg.DATASETS.TRAIN[0]:
+        if "coco" in cfg.DATASETS.TRAIN[0]:
             mapper = DatasetMapperWithSupportCOCO(cfg, True)
-        elif 'voc' in cfg.DATASETS.TRAIN[0]:
+        elif "mvtecvoc" in cfg.DATASETS.TRAIN[0]:
+            mapper = DatasetMapperWithSupportMVTECVOC(cfg, True)
+        elif "voc" in cfg.DATASETS.TRAIN[0]:
             mapper = DatasetMapperWithSupportVOC(cfg, True)
     dataset = MapDataset(dataset, mapper)
 
@@ -159,8 +189,10 @@ def build_detection_train_loader(cfg, mapper=None):
     if sampler_name == "TrainingSampler":
         sampler = TrainingSampler(len(dataset))
     elif sampler_name == "RepeatFactorTrainingSampler":
-        repeat_factors = RepeatFactorTrainingSampler.repeat_factors_from_category_frequency(
-            dataset_dicts, cfg.DATALOADER.REPEAT_THRESHOLD
+        repeat_factors = (
+            RepeatFactorTrainingSampler.repeat_factors_from_category_frequency(
+                dataset_dicts, cfg.DATALOADER.REPEAT_THRESHOLD
+            )
         )
         sampler = RepeatFactorTrainingSampler(repeat_factors)
     else:
@@ -172,6 +204,7 @@ def build_detection_train_loader(cfg, mapper=None):
         aspect_ratio_grouping=cfg.DATALOADER.ASPECT_RATIO_GROUPING,
         num_workers=cfg.DATALOADER.NUM_WORKERS,
     )
+
 
 def build_detection_test_loader(cfg, dataset_name, mapper=None):
     """
@@ -190,18 +223,22 @@ def build_detection_test_loader(cfg, dataset_name, mapper=None):
     """
     dataset_dicts = get_detection_dataset_dicts(
         [dataset_name],
-        filter_empty=False, # True,
+        filter_empty=False,  # True,
         proposal_files=[
-            cfg.DATASETS.PROPOSAL_FILES_TEST[list(cfg.DATASETS.TEST).index(dataset_name)]
+            cfg.DATASETS.PROPOSAL_FILES_TEST[
+                list(cfg.DATASETS.TEST).index(dataset_name)
+            ]
         ]
         if cfg.MODEL.LOAD_PROPOSALS
         else None,
     )
     dataset = DatasetFromList(dataset_dicts)
     if mapper is None:
-        if 'coco' in cfg.DATASETS.TRAIN[0]:
+        if "coco" in cfg.DATASETS.TRAIN[0]:
             mapper = DatasetMapperWithSupportCOCO(cfg, False)
-        elif 'voc' in cfg.DATASETS.TRAIN[0]:
+        elif "mvtecvoc" in cfg.DATASETS.TRAIN[0]:
+            mapper = DatasetMapperWithSupportMVTECVOC(cfg, False)
+        elif "voc" in cfg.DATASETS.TRAIN[0]:
             mapper = DatasetMapperWithSupportVOC(cfg, False)
     dataset = MapDataset(dataset, mapper)
 

@@ -9,11 +9,17 @@ This script is a simplified version of the training script in detectron2/tools.
 @author: Guangxing Han
 """
 
+
 import os
 
 from detectron2.checkpoint import DetectionCheckpointer
 from detectron2.config import get_cfg
-from detectron2.engine import DefaultTrainer, default_argument_parser, default_setup, launch
+from detectron2.engine import (
+    DefaultTrainer,
+    default_argument_parser,
+    default_setup,
+    launch,
+)
 from detectron2.data import build_batch_data_loader
 from detectron2.evaluation import (
     DatasetEvaluator,
@@ -23,7 +29,11 @@ from detectron2.evaluation import (
 )
 
 from FCT.config import get_cfg
-from FCT.data import DatasetMapperWithSupportCOCO, DatasetMapperWithSupportVOC
+from FCT.data import (
+    DatasetMapperWithSupportCOCO,
+    DatasetMapperWithSupportVOC,
+    DatasetMapperWithSupportMVTECVOC,
+)
 from FCT.data.build import build_detection_train_loader, build_detection_test_loader
 from FCT.solver import build_optimizer
 from FCT.evaluation import COCOEvaluator, PascalVOCDetectionEvaluator
@@ -41,8 +51,8 @@ from collections import OrderedDict
 import detectron2.utils.comm as comm
 from detectron2.utils.logger import setup_logger
 
-class Trainer(DefaultTrainer):
 
+class Trainer(DefaultTrainer):
     @classmethod
     def build_train_loader(cls, cfg):
         """
@@ -51,14 +61,17 @@ class Trainer(DefaultTrainer):
         It calls :func:`detectron2.data.build_detection_train_loader` with a customized
         DatasetMapper, which adds categorical labels as a semantic mask.
         """
-        if 'coco' in cfg.DATASETS.TRAIN[0]:
+        if "coco" in cfg.DATASETS.TRAIN[0]:
             mapper = DatasetMapperWithSupportCOCO(cfg)
+        elif "mvtecvoc" in cfg.DATASETS.TRAIN[0]:
+            mapper = DatasetMapperWithSupportMVTECVOC(cfg)
         else:
             mapper = DatasetMapperWithSupportVOC(cfg)
         return build_detection_train_loader(cfg, mapper)
 
     @classmethod
     def build_test_loader(cls, cfg, dataset_name):
+        # FIXME: called in eval mode only??
         """
         Returns:
             iterable
@@ -79,15 +92,17 @@ class Trainer(DefaultTrainer):
 
     @classmethod
     def build_evaluator(cls, cfg, dataset_name, output_folder=None):
+        # FIXME: just use PascalVOCDetectionEvaluator for mvtecvoc
         if output_folder is None:
             output_folder = os.path.join(cfg.OUTPUT_DIR, "inference")
-        if 'coco' in dataset_name:
+        if "coco" in dataset_name:
             return COCOEvaluator(dataset_name, cfg, True, output_folder)
         else:
             return PascalVOCDetectionEvaluator(dataset_name)
 
     @classmethod
     def test(cls, cfg, model, evaluators=None):
+        # FIXME: called in eval mode only??
         """
         Args:
             cfg (CfgNode):
@@ -128,14 +143,21 @@ class Trainer(DefaultTrainer):
             test_seeds = cfg.DATASETS.SEEDS
             test_shots = cfg.DATASETS.TEST_SHOTS
             cur_test_shots_set = set(test_shots)
-            if 'coco' in cfg.DATASETS.TRAIN[0]:
-                evaluation_dataset = 'coco'
-                coco_test_shots_set = set([1,2,3,5,10,30])
+            if "coco" in cfg.DATASETS.TRAIN[0]:
+                evaluation_dataset = "coco"
+                coco_test_shots_set = set([1, 2, 3, 5, 10, 30])
                 test_shots_join = cur_test_shots_set.intersection(coco_test_shots_set)
                 test_keepclasses = cfg.DATASETS.TEST_KEEPCLASSES
+            elif "mvtecvoc" in cfg.DATASETS.TRAIN[0]:
+                evaluation_dataset = "mvtecvoc"
+                mvtecvoc_test_shots_set = set([1, 2, 3, 5])  # FIXME: 10
+                test_shots_join = cur_test_shots_set.intersection(
+                    mvtecvoc_test_shots_set
+                )
+                test_keepclasses = cfg.DATASETS.TEST_KEEPCLASSES
             else:
-                evaluation_dataset = 'voc'
-                voc_test_shots_set = set([1,2,3,5,10])
+                evaluation_dataset = "voc"
+                voc_test_shots_set = set([1, 2, 3, 5, 10])
                 test_shots_join = cur_test_shots_set.intersection(voc_test_shots_set)
                 test_keepclasses = cfg.DATASETS.TEST_KEEPCLASSES
 
@@ -145,11 +167,19 @@ class Trainer(DefaultTrainer):
 
             print("================== test_shots_join=", test_shots_join)
             for shot in test_shots_join:
-                print("evaluating {}.{} for {} shot".format(evaluation_dataset, test_keepclasses, shot))
+                print(
+                    "evaluating {}.{} for {} shot".format(
+                        evaluation_dataset, test_keepclasses, shot
+                    )
+                )
                 if isinstance(model, torch.nn.parallel.DistributedDataParallel):
-                    model.module.init_support_features(evaluation_dataset, shot, test_keepclasses, test_seeds)
+                    model.module.init_support_features(
+                        evaluation_dataset, shot, test_keepclasses, test_seeds
+                    )
                 else:
-                    model.init_support_features(evaluation_dataset, shot, test_keepclasses, test_seeds)
+                    model.init_support_features(
+                        evaluation_dataset, shot, test_keepclasses, test_seeds
+                    )
 
                 results_i = inference_on_dataset(model, data_loader, evaluator)
                 results[dataset_name] = results_i
@@ -159,7 +189,9 @@ class Trainer(DefaultTrainer):
                     ), "Evaluator must return a dict on the main process. Got {} instead.".format(
                         results_i
                     )
-                    logger.info("Evaluation results for {} in csv format:".format(dataset_name))
+                    logger.info(
+                        "Evaluation results for {} in csv format:".format(dataset_name)
+                    )
                     print_csv_format(results_i)
 
         if len(results) == 1:
