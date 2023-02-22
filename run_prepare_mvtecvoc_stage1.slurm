@@ -4,7 +4,7 @@
 
 #SBATCH --job-name="prepare"
 #SBATCH --account=punim1623
-#SBATCH --time=0-00:10:00
+#SBATCH --time=0-01:00:00
 
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
@@ -12,16 +12,12 @@
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=40G
 
-### SBATCH --mail-user=haitianh@student.unimelb.edu.au
-### SBATCH --mail-type=BEGIN
-
 module purge
 
 eval "$(conda shell.bash hook)"
 conda activate fct
 
-python3 datasets/pascal_voc/2_gen_support_pool.py
+python3 datasets/mvtecvoc/1_prepare_mvtecvoc_few_shot.py
 
 ##Log this job's resource usage stats###
 my-job-stats -a -n -s
-##
