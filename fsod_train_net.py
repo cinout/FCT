@@ -23,9 +23,11 @@ from detectron2.engine import (
 from detectron2.data import build_batch_data_loader
 from detectron2.evaluation import (
     DatasetEvaluator,
-    inference_on_dataset,
     print_csv_format,
     verify_results,
+)
+from fsdet.evaluation import (
+    inference_on_dataset,
 )
 
 from FCT.config import get_cfg
@@ -124,6 +126,7 @@ class Trainer(DefaultTrainer):
 
         results = OrderedDict()
         for idx, dataset_name in enumerate(cfg.DATASETS.TEST):
+            # FIXME: called in evaluation stage of training/fine-tuning (this is where testing happens)
             data_loader = cls.build_test_loader(cfg, dataset_name)
             # When evaluators are passed in as arguments,
             # implicitly assume that evaluators can be created before data_loader.
@@ -181,7 +184,9 @@ class Trainer(DefaultTrainer):
                         evaluation_dataset, shot, test_keepclasses, test_seeds
                     )
 
-                results_i = inference_on_dataset(model, data_loader, evaluator)
+                results_i = inference_on_dataset(
+                    model, data_loader, evaluator, dataset_name
+                )
                 results[dataset_name] = results_i
                 if comm.is_main_process():
                     assert isinstance(

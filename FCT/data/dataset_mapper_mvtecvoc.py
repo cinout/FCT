@@ -296,7 +296,7 @@ class DatasetMapperWithSupportMVTECVOC:
             assert support_db["id"].values[0] == support_id
 
             support_data = utils.read_image(
-                "./datasets/mvtecvoc/" + support_db["file_path"].tolist()[0],
+                support_db["file_path"].tolist()[0],
                 format=self.img_format,
             )
             support_data = torch.as_tensor(
