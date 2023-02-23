@@ -186,16 +186,15 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
                         all_classes.index(c) for c in novel_classes
                     ]
                     pred_classes = instances.pred_classes
+                    scores = instances.scores
+                    boxes = instances.pred_boxes
 
                     novel_predictions_idx = torch.nonzero(
                         sum(pred_classes == i for i in novel_classes_ordinal)
                     ).squeeze()  # indices of all novel predictions
 
-                    boxes = instances.pred_boxes
-                    print(boxes)
-                    print("-----------")
-                    boxes = torch.index_select(boxes, 0, novel_predictions_idx)
-                    print(boxes)
+                    print(pred_classes)
+                    print(novel_predictions_idx)
 
                     exit()
 
