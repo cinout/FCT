@@ -199,7 +199,7 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
                     )
                     boxes = torch.index_select(boxes, 0, novel_predictions_idx)
 
-                    print(instances.image_height)
+                    print(instances.image_size)
                     # print(instances["image_width"])
 
                     exit()
