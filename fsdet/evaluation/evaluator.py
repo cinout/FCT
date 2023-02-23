@@ -209,11 +209,8 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
                         "pred_boxes", detectron2.structures.Boxes(tensor=boxes)
                     )
 
-                    print(novel_instances)
-                    exit()
-
                     vis_output = visualizer.draw_instance_predictions(
-                        predictions=instances
+                        predictions=novel_instances
                     )
 
                 os.makedirs("test_vis_output", exist_ok=True)
