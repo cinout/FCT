@@ -172,17 +172,43 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
                 visualizer = Visualizer(image, metadata, instance_mode=ColorMode.IMAGE)
                 if "instances" in output:
                     instances = output["instances"].to(torch.device("cpu"))
-                    # FIXME: filter out base classes
-                    print(">>>>>>>>>>>>> instances")
-                    print(instances)
-                    print(">>>>>>>>>>>>> metadata")
-                    print(metadata)
+                    # # FIXME: filter out base classes
+                    # print(">>>>>>>>>>>>> instances")
+                    # print(instances)
+                    # print(">>>>>>>>>>>>> metadata")
+                    # print(metadata)
+
+                    # base_classes = metadata["base_classes"]
+                    novel_classes = metadata["novel_classes"]
+                    all_classes = metadata["thing_classes"]
+                    novel_classes_ordinal = [
+                        all_classes.index(c) for c in novel_classes
+                    ]
+
+                    boxes = instances["fields"]["pred_boxes"]["Boxes"]  # tensor
+                    scores = instances["fields"]["scores"]  # tensor
+                    pred_classes = instances["fields"]["pred_classes"]  # tensor
+
+                    novel_predictions_idx = torch.nonzero(
+                        sum(pred_classes == i for i in novel_classes_ordinal)
+                    ).squeeze()  # indices of all novel predictions
+
+                    boxes = torch.index_select(boxes, 0, novel_predictions_idx)
+                    scores = torch.index_select(scores, 0, novel_predictions_idx)
+                    pred_classes = torch.index_select(
+                        pred_classes, 0, novel_predictions_idx
+                    )
+
+                    instances["fields"]["pred_boxes"]["Boxes"] = boxes
+                    instances["fields"]["scores"] = scores
+                    instances["fields"]["pred_classes"] = pred_classes
+                    instances["num_instances"] = novel_predictions_idx.shape[0]
 
                     vis_output = visualizer.draw_instance_predictions(
                         predictions=instances
                     )
 
-                os.makedirs("test_vis_output",exist_ok=True)
+                os.makedirs("test_vis_output", exist_ok=True)
                 vis_output.save(
                     os.path.join(
                         "test_vis_output", os.path.basename(input["file_name"])
