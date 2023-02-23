@@ -187,7 +187,8 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
 
                     novel_predictions_idx = torch.nonzero(
                         sum(pred_classes == i for i in novel_classes_ordinal)
-                    ).squeeze()  # indices of all novel predictions
+                        & (scores > 0.2)
+                    ).squeeze()  # indices of all novel predictions FIXME: plus scores>0.2
 
                     scores = torch.index_select(scores, 0, novel_predictions_idx)
                     pred_classes = torch.index_select(
