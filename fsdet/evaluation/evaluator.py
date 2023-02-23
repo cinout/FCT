@@ -199,12 +199,12 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
                     )
                     boxes = torch.index_select(boxes, 0, novel_predictions_idx)
 
-                    print(instances.get("image_height"))
+                    print(instances.image_height)
                     # print(instances["image_width"])
 
                     exit()
 
-                    novel_instances = detectron2.strcutures.Instances()
+                    novel_instances = detectron2.strcutures.Instances(image_size=())
 
                     instances["fields"]["pred_boxes"]["Boxes"] = boxes
                     instances["fields"]["scores"] = scores
