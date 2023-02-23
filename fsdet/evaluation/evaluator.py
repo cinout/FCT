@@ -6,6 +6,7 @@ from collections import OrderedDict, abc
 from contextlib import contextmanager, ExitStack
 from torch import nn
 import torch
+import detectron2
 from detectron2.utils.comm import is_main_process
 from detectron2.utils.visualizer import ColorMode, Visualizer
 from detectron2.data import MetadataCatalog
@@ -184,17 +185,23 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
                     novel_classes_ordinal = [
                         all_classes.index(c) for c in novel_classes
                     ]
+                    pred_classes = instances.pred_classes
 
-                    print(instances.pred_boxes)
+                    novel_predictions_idx = torch.nonzero(
+                        sum(pred_classes == i for i in novel_classes_ordinal)
+                    ).squeeze()  # indices of all novel predictions
+
+                    boxes = instances.pred_boxes
+                    print(boxes)
+                    print("-----------")
+                    boxes = torch.index_select(boxes, 0, novel_predictions_idx)
+                    print(boxes)
+
                     exit()
 
                     boxes = instances["fields"]["pred_boxes"]["Boxes"]  # tensor
                     scores = instances["fields"]["scores"]  # tensor
                     pred_classes = instances["fields"]["pred_classes"]  # tensor
-
-                    novel_predictions_idx = torch.nonzero(
-                        sum(pred_classes == i for i in novel_classes_ordinal)
-                    ).squeeze()  # indices of all novel predictions
 
                     boxes = torch.index_select(boxes, 0, novel_predictions_idx)
                     scores = torch.index_select(scores, 0, novel_predictions_idx)
