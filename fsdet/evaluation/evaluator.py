@@ -185,10 +185,8 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
                         all_classes.index(c) for c in novel_classes
                     ]
 
-                    print(instances["fields"])
+                    print(instances.get("fields"))
                     exit()
-
-
 
                     boxes = instances["fields"]["pred_boxes"]["Boxes"]  # tensor
                     scores = instances["fields"]["scores"]  # tensor
