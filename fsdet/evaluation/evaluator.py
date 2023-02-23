@@ -187,6 +187,7 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
                     ]
                     pred_classes = instances.pred_classes
                     scores = instances.scores
+                    boxes = instances.pred_boxes.tensor
 
                     novel_predictions_idx = torch.nonzero(
                         sum(pred_classes == i for i in novel_classes_ordinal)
@@ -196,11 +197,10 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
                     pred_classes = torch.index_select(
                         pred_classes, 0, novel_predictions_idx
                     )
-
-                    boxes = instances.pred_boxes.tensor
                     boxes = torch.index_select(boxes, 0, novel_predictions_idx)
 
-                    print(boxes.shape)
+                    print(instances["image_height"])
+                    print(instances["image_width"])
 
                     exit()
 
