@@ -251,20 +251,26 @@ scores = torch.tensor(
     ]
 )
 
-novel_classes_ordinal = [all_classes.index(c) for c in novel_classes]
+for c in novel_classes:
+    c_ordinal = all_classes.index(c)
+    c_pred_idx = torch.nonzero(pred_classes == c_ordinal).squeeze()
+    c_pred_scores = torch.index_select(scores, 0, c_pred_idx)
+    print(c_pred_scores.shape)
 
-hoho = sum(pred_classes == i for i in novel_classes_ordinal)
+# novel_classes_ordinal = [all_classes.index(c) for c in novel_classes]
 
-valid_preds = scores > 0.2
+# hoho = sum(pred_classes == i for i in novel_classes_ordinal)
 
-print(hoho & valid_preds)
+# valid_preds = scores > 0.2
+
+# print(hoho & valid_preds)
 
 
-exit()
+# exit()
 
 
-novel_predictions_idx = torch.nonzero(
-    sum(pred_classes == i for i in novel_classes_ordinal)
-).squeeze()
+# novel_predictions_idx = torch.nonzero(
+#     sum(pred_classes == i for i in novel_classes_ordinal)
+# ).squeeze()
 
-print(novel_predictions_idx.shape[0])
+# print(novel_predictions_idx.shape[0])

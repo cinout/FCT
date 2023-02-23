@@ -185,6 +185,11 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
                     scores = instances.scores
                     boxes = instances.pred_boxes.tensor
 
+                    # FIXME: choose top-?
+                    for c in novel_classes:
+                        c_ordinal = all_classes.index(c)
+                        torch.nonzero(pred_classes == c_ordinal).squeeze()
+
                     novel_predictions_idx = torch.nonzero(
                         sum(pred_classes == i for i in novel_classes_ordinal)
                         & (scores > 0.2)
