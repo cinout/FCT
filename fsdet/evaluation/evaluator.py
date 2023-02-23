@@ -173,11 +173,7 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
                 visualizer = Visualizer(image, metadata, instance_mode=ColorMode.IMAGE)
                 if "instances" in output:
                     instances = output["instances"].to(torch.device("cpu"))
-                    # # FIXME: filter out base classes
-                    # print(">>>>>>>>>>>>> instances")
-                    # print(instances)
-                    # print(">>>>>>>>>>>>> metadata")
-                    # print(metadata)
+                    # FIXME: filter out base classes
 
                     # base_classes = metadata["base_classes"]
                     novel_classes = metadata.get("novel_classes")

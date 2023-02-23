@@ -148,6 +148,12 @@ pred_classes = torch.tensor(
 
 novel_classes_ordinal = [all_classes.index(c) for c in novel_classes]
 
+hoho = sum(pred_classes == i for i in novel_classes_ordinal)
+
+print(hoho)
+
+exit()
+
 
 novel_predictions_idx = torch.nonzero(
     sum(pred_classes == i for i in novel_classes_ordinal)
