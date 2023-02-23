@@ -185,21 +185,32 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
                     scores = instances.scores
                     boxes = instances.pred_boxes.tensor
 
-                    # FIXME: choose top-?
+                    # FIXME: choose top-k
+                    final_preds = []
+
                     for c in novel_classes:
                         c_ordinal = all_classes.index(c)
-                        torch.nonzero(pred_classes == c_ordinal).squeeze()
+                        c_pred_idx = torch.nonzero(pred_classes == c_ordinal).squeeze()
+                        c_pred_scores = torch.index_select(scores, 0, c_pred_idx)
+                        print(c_pred_idx)
+                        print(c_pred_scores)
 
-                    novel_predictions_idx = torch.nonzero(
-                        sum(pred_classes == i for i in novel_classes_ordinal)
-                        & (scores > 0.2)
-                    ).squeeze()  # indices of all novel predictions FIXME: plus scores>0.2
+                        # FIXME: other categories
+                        if c == "orange":
+                            topk = 2
+                        else:
+                            topk = 1
 
-                    scores = torch.index_select(scores, 0, novel_predictions_idx)
-                    pred_classes = torch.index_select(
-                        pred_classes, 0, novel_predictions_idx
-                    )
-                    boxes = torch.index_select(boxes, 0, novel_predictions_idx)
+                        (values, indices) = torch.topk(c_pred_scores, k=topk, dim=0)
+                        final_preds_4c = torch.index_select(c_pred_idx, 0, indices)
+                        final_preds.append(final_preds_4c)
+
+                    final_preds = torch.cat(final_preds, dim=0)
+                    # end of choosing top-k
+
+                    scores = torch.index_select(scores, 0, final_preds)
+                    pred_classes = torch.index_select(pred_classes, 0, final_preds)
+                    boxes = torch.index_select(boxes, 0, final_preds)
 
                     novel_instances = detectron2.structures.Instances(
                         image_size=instances.image_size

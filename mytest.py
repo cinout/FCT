@@ -251,11 +251,29 @@ scores = torch.tensor(
     ]
 )
 
+final_preds = []
+
 for c in novel_classes:
     c_ordinal = all_classes.index(c)
     c_pred_idx = torch.nonzero(pred_classes == c_ordinal).squeeze()
     c_pred_scores = torch.index_select(scores, 0, c_pred_idx)
-    print(c_pred_scores.shape)
+    print(c_pred_idx)
+    print(c_pred_scores)
+
+    # FIXME: other categories
+    if c == "orange":
+        topk = 2
+    else:
+        topk = 1
+
+    (values, indices) = torch.topk(c_pred_scores, k=topk, dim=0)
+    final_preds_4c = torch.index_select(c_pred_idx, 0, indices)
+    final_preds.append(final_preds_4c)
+
+final_preds = torch.cat(final_preds, dim=0)
+
+print(final_preds)
+
 
 # novel_classes_ordinal = [all_classes.index(c) for c in novel_classes]
 
