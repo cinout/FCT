@@ -179,8 +179,8 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
                     # print(metadata)
 
                     # base_classes = metadata["base_classes"]
-                    novel_classes = metadata["novel_classes"]
-                    all_classes = metadata["thing_classes"]
+                    novel_classes = metadata.get("novel_classes")
+                    all_classes = metadata.get("thing_classes")
                     novel_classes_ordinal = [
                         all_classes.index(c) for c in novel_classes
                     ]
