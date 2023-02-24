@@ -1,5 +1,9 @@
 import torch
 
+aa ="screw_bag_mvtecvoc_trainval_all_5shot"
+
+aa.split()
+
 categories = [
     "breakfast_box",
     "juice_bottle",

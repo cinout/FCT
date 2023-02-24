@@ -63,6 +63,7 @@ class Trainer(DefaultTrainer):
         It calls :func:`detectron2.data.build_detection_train_loader` with a customized
         DatasetMapper, which adds categorical labels as a semantic mask.
         """
+        print(f">>>>>>>>>>> arrive D")
         if "coco" in cfg.DATASETS.TRAIN[0]:
             mapper = DatasetMapperWithSupportCOCO(cfg)
         elif "mvtecvoc" in cfg.DATASETS.TRAIN[0]:
@@ -229,8 +230,11 @@ def main(args):
         res = Trainer.test(cfg, model)
         return res
 
+    print(f">>>>>>>>>>> arrive A")
     trainer = Trainer(cfg)
+    print(f">>>>>>>>>>> arrive B")
     trainer.resume_or_load(resume=args.resume)
+    print(f">>>>>>>>>>> arrive C")
     return trainer.train()
 
 
