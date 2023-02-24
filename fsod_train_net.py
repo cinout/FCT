@@ -69,40 +69,7 @@ print("META_ARCH_REGISTRY is:")
 print(META_ARCH_REGISTRY)
 
 
-# # FIXME: remove later
-# def build_model(cfg):
-#     """
-#     Build the whole model architecture, defined by ``cfg.MODEL.META_ARCHITECTURE``.
-#     Note that it does not load any weights from ``cfg``.
-#     """
-#     print(f">>>>>>>>>>> arrive A1")
-
-#     meta_arch = cfg.MODEL.META_ARCHITECTURE
-#     model = META_ARCH_REGISTRY.get(meta_arch)(cfg)
-
-#     print(f">>>>>>>>>>> arrive A2")
-#     model.to(torch.device(cfg.MODEL.DEVICE))
-#     # _log_api_usage("modeling.meta_arch." + meta_arch)
-
-#     print(f">>>>>>>>>>> arrive A3")
-#     return model
-
-
 class Trainer(DefaultTrainer):
-    # @classmethod
-    # def build_model(cls, cfg):
-    #     """
-    #     Returns:
-    #         torch.nn.Module:
-
-    #     It now calls :func:`detectron2.modeling.build_model`.
-    #     Overwrite it if you'd like a different model.
-    #     """
-    #     model = build_model(cfg)
-    #     logger = logging.getLogger(__name__)
-    #     logger.info("Model:\n{}".format(model))
-    #     return model
-
     @classmethod
     def build_train_loader(cls, cfg):
         """
