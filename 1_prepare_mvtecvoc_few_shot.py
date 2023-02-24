@@ -99,7 +99,23 @@ VOC_CLASSES = [
     "washer",
     "screw_nut",
     "pushpin",
-    # FIXME: update (append instead of replacing)
+    "clamp_2l",
+    "clamp_2r",
+    "cable_yellow",
+    "clamp_3l",
+    "clamp_3r",
+    "cable_blue",
+    "clamp_5l",
+    "clamp_5r",
+    "cable_red",
+    "juice_banana",
+    "label_banana",
+    "juice_orange",
+    "label_orange",
+    "juice_cherry",
+    "label_cherry",
+    "label_100",
+     # FIXME: update (append instead of replacing)
 ]
 
 
@@ -141,10 +157,12 @@ def generate_seeds():
         for shot in shots:  # for each shot number
             c_data = []
 
-            if len(data_per_cat[c])<shot:
+            if len(data_per_cat[c]) < shot:
                 shots_c = data_per_cat[c]
             else:
-                shots_c = random.sample(data_per_cat[c], shot)  # anno file paths for shots
+                shots_c = random.sample(
+                    data_per_cat[c], shot
+                )  # anno file paths for shots
 
             for s in shots_c:
                 tree = ET.parse(s)

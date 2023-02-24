@@ -17,7 +17,7 @@ base_classes = [
     "train",
     "tvmonitor",
 ]
-novel_classes = ["nectarine", "orange", "cereal", "almond_mix"]
+novel_classes = ["nectarine", "orange", "cereal", "almond_mix", "dummy"]
 all_classes = [
     "aeroplane",
     "bicycle",
@@ -38,6 +38,7 @@ all_classes = [
     "orange",
     "cereal",
     "almond_mix",
+    "dummy",
 ]
 
 
@@ -257,8 +258,6 @@ for c in novel_classes:
     c_ordinal = all_classes.index(c)
     c_pred_idx = torch.nonzero(pred_classes == c_ordinal).squeeze()
     c_pred_scores = torch.index_select(scores, 0, c_pred_idx)
-    print(c_pred_idx)
-    print(c_pred_scores)
 
     # FIXME: other categories
     if c == "orange":
@@ -266,7 +265,11 @@ for c in novel_classes:
     else:
         topk = 1
 
-    (values, indices) = torch.topk(c_pred_scores, k=topk, dim=0)
+    (values, indices) = torch.topk(
+        c_pred_scores,
+        k=(c_pred_idx.shape[0] if topk > c_pred_idx.shape[0] else topk),
+        dim=0,
+    )
     final_preds_4c = torch.index_select(c_pred_idx, 0, indices)
     final_preds.append(final_preds_4c)
 

@@ -201,7 +201,15 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
                         else:
                             topk = 1
 
-                        (values, indices) = torch.topk(c_pred_scores, k=topk, dim=0)
+                        (values, indices) = torch.topk(
+                            c_pred_scores,
+                            k=(
+                                c_pred_idx.shape[0]
+                                if topk > c_pred_idx.shape[0]
+                                else topk
+                            ),
+                            dim=0,
+                        )
                         final_preds_4c = torch.index_select(c_pred_idx, 0, indices)
                         final_preds.append(final_preds_4c)
 
