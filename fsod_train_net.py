@@ -238,7 +238,11 @@ def main(args):
 
 
 if __name__ == "__main__":
-    args = default_argument_parser().parse_args()
+    parser = default_argument_parser()
+    parser.add_argument(
+        "--mvtec_category", default="", type=str, help="fine-tuning mvtec category"
+    )
+    args = parser.parse_args()
     print("Command Line Args:", args)
     launch(
         main,
