@@ -12,7 +12,7 @@
 
 #SBATCH --job-name="ft-screw"
 #SBATCH --account=punim1623
-#SBATCH --time=0-05:00:00
+#SBATCH --time=0-10:00:00
 
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=4
