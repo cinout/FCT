@@ -203,8 +203,7 @@ MVTECVOC_BASE_CATEGORIES = [
 ]
 
 
-def _get_mvtecvoc_fewshot_instances_meta(filesplit):
-    category = filesplit.split("_mvtecvoc_")[0]
+def _get_mvtecvoc_fewshot_instances_meta(category):
     ret = {
         "thing_classes": MVTECVOC_ALL_CATEGORIES[category],
         "novel_classes": MVTECVOC_NOVEL_CATEGORIES[category],
@@ -213,7 +212,7 @@ def _get_mvtecvoc_fewshot_instances_meta(filesplit):
     return ret
 
 
-def _get_builtin_metadata_mvtecvoc(dataset_name, filesplit):
+def _get_builtin_metadata_mvtecvoc(dataset_name, category):
     if dataset_name == "mvtecvoc_fewshot":
-        return _get_mvtecvoc_fewshot_instances_meta(filesplit)
+        return _get_mvtecvoc_fewshot_instances_meta(category)
     raise KeyError("No built-in metadata for dataset {}".format(dataset_name))

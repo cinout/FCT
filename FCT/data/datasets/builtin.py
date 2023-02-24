@@ -179,9 +179,15 @@ def register_all_mvtecvoc(root="datasets"):
     ]
 
     METASPLITS = [
-        ("mvtecvoc_trainval_base", "mvtecvoc", "trainval", "base"),
+        (
+            "mvtecvoc_trainval_base",
+            "mvtecvoc",
+            "trainval",
+            "breakfast_box",
+            "base",
+        ),  # FIXME: the breakfast_box can be substituted with any other class, as only base classes are needed, and we treat base classes the same for each mvtec category
         *[
-            ((f"mvtecvoc_test_all_{c}", "mvtecvoc", "test", "base_novel"))
+            ((f"mvtecvoc_test_all_{c}", "mvtecvoc", "test", c, "base_novel"))
             for c in categories
         ],
     ]
@@ -196,14 +202,16 @@ def register_all_mvtecvoc(root="datasets"):
                         category, prefix, shot, seed
                     )
                     dirname = "mvtecvoc"
-                    file_split = "{}_{}_{}shot_trainval".format(category, prefix, shot)
+                    file_split = "{}_{}shot_trainval".format(prefix, shot)
                     keepclasses = "base_novel" if prefix == "all" else "novel"
-                    METASPLITS.append((name, dirname, file_split, keepclasses))
+                    METASPLITS.append(
+                        (name, dirname, file_split, category, keepclasses)
+                    )
 
-    for name, dirname, split, keepclasses in METASPLITS:
+    for name, dirname, split, category, keepclasses in METASPLITS:
         register_meta_mvtecvoc(
             name,
-            _get_builtin_metadata_mvtecvoc("mvtecvoc_fewshot", split),
+            _get_builtin_metadata_mvtecvoc("mvtecvoc_fewshot", category),
             os.path.join(root, dirname),
             split,
             keepclasses,
