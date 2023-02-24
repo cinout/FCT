@@ -277,9 +277,7 @@ def main(args):
         res = Trainer.test(cfg, model)
         return res
 
-    print(f">>>>>>>>>>> arrive A")
     trainer = Trainer(cfg)
-    print(f">>>>>>>>>>> arrive B")
     trainer.resume_or_load(resume=args.resume)
     return trainer.train()
 

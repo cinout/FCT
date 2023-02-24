@@ -204,6 +204,8 @@ MVTECVOC_BASE_CATEGORIES = [
 
 
 def _get_mvtecvoc_fewshot_instances_meta(category):
+    print(">>>>>>>>>> category")
+    print(category)
     ret = {
         "thing_classes": MVTECVOC_ALL_CATEGORIES[category],
         "novel_classes": MVTECVOC_NOVEL_CATEGORIES[category],
