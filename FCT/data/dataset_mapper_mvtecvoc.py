@@ -24,9 +24,9 @@ This file contains the default mapping that's applied to "dataset dicts".
 __all__ = ["DatasetMapperWithSupportMVTECVOC"]
 
 categories = [
-    "screw_bag",
     "breakfast_box",
     "juice_bottle",
+    "screw_bag",
     "pushpins",
     "splicing_connectors",
 ]
