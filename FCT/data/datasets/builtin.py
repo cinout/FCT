@@ -170,6 +170,7 @@ def register_all_pascal_voc(root="datasets"):
 
 
 def register_all_mvtecvoc(root="datasets"):
+    # FIXME: this is where the error stems from
     categories = [
         "screw_bag",
         "breakfast_box",
@@ -192,6 +193,9 @@ def register_all_mvtecvoc(root="datasets"):
         ],
     ]
 
+    print(">>>>>>>>>> METASPLITS [BEFORE]")
+    print(METASPLITS)
+
     # register small meta datasets for fine-tuning stage
     for prefix in ["all", "novel"]:
         for shot in [1, 2, 3, 5]:  # FIXME[DONE]: add 10 shots
@@ -208,6 +212,9 @@ def register_all_mvtecvoc(root="datasets"):
                         (name, dirname, file_split, category, keepclasses)
                     )
 
+    print(">>>>>>>>>> METASPLITS [AFTER]")
+    print(METASPLITS)
+    
     for name, dirname, split, category, keepclasses in METASPLITS:
         register_meta_mvtecvoc(
             name,
