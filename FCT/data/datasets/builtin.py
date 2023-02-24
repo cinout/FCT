@@ -183,7 +183,7 @@ def register_all_mvtecvoc(root="datasets"):
             "mvtecvoc_trainval_base",
             "mvtecvoc",
             "trainval",
-            "breakfast_box",
+            "splicing_connectors",
             "base",
         ),  # FIXME[DONE]: the breakfast_box can be substituted with any other class, as only base classes are needed, and we treat base classes the same for each mvtec category
         *[
