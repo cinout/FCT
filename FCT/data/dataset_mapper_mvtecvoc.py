@@ -96,17 +96,11 @@ class DatasetMapperWithSupportMVTECVOC:
             if self.few_shot:
                 train_name = cfg.DATASETS.TRAIN[0]
 
-                print(">>>>>>>>>> train_name[before]")
-                print(train_name)
-
                 # FIXME[DONE]: this is hacking code
                 for c in categories:
                     if train_name.startswith(c):
                         train_name = train_name.split(f"{c}_")[-1]
                         break
-
-                print(">>>>>>>>>> train_name[after]")
-                print(train_name)
 
                 if self.seeds == 0:
                     self.support_df = pd.read_pickle(

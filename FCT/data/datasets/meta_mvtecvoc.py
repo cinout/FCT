@@ -130,10 +130,6 @@ def load_filtered_mvtecvoc_instances(
                 "datasets/mvtec_loco_ad", category_name, "validation", "good"
             )
 
-            print(">>>>>>>>>> category_name")
-            print(category_name)
-
-
             if category_name == "breakfast_box":
                 height = 1280
                 width = 1600
