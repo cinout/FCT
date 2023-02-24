@@ -145,6 +145,8 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
     total_compute_time = 0
     total_eval_time = 0
     metadata = MetadataCatalog.get(dataset_name)
+    print("-------metadata--------")
+    print(metadata)
     with ExitStack() as stack:
         if isinstance(model, nn.Module):
             stack.enter_context(inference_context(model))
@@ -177,6 +179,12 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
                     # base_classes = metadata["base_classes"]
                     novel_classes = metadata.get("novel_classes")
                     all_classes = metadata.get("thing_classes")
+                    print("-------novel_classes--------")
+                    print(novel_classes)
+                    print("-------all_classes--------")
+                    print(all_classes)
+
+                    exit()
                     novel_classes_ordinal = [
                         all_classes.index(c) for c in novel_classes
                     ]
