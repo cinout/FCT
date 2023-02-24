@@ -173,7 +173,6 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
                 visualizer = Visualizer(image, metadata, instance_mode=ColorMode.IMAGE)
                 if "instances" in output:
                     instances = output["instances"].to(torch.device("cpu"))
-                    # FIXME: filter out base classes
 
                     # base_classes = metadata["base_classes"]
                     novel_classes = metadata.get("novel_classes")
@@ -185,36 +184,43 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
                     scores = instances.scores
                     boxes = instances.pred_boxes.tensor
 
-                    # FIXME: choose top-k
-                    final_preds = []
+                    """
+                    Option 1: choose top-k
+                    """
+                    # final_preds = []
 
-                    for c in novel_classes:
-                        c_ordinal = all_classes.index(c)
-                        c_pred_idx = torch.nonzero(pred_classes == c_ordinal).squeeze()
-                        c_pred_scores = torch.index_select(scores, 0, c_pred_idx)
-                        print(c_pred_idx)
-                        print(c_pred_scores)
+                    # for c in novel_classes:
+                    #     c_ordinal = all_classes.index(c)
+                    #     c_pred_idx = torch.nonzero(pred_classes == c_ordinal).squeeze()
+                    #     c_pred_scores = torch.index_select(scores, 0, c_pred_idx)
 
-                        # FIXME: other categories
-                        if c == "orange":
-                            topk = 2
-                        else:
-                            topk = 1
+                    #     # FIXME: other categories
+                    #     if c == "orange":
+                    #         topk = 2
+                    #     else:
+                    #         topk = 1
 
-                        (values, indices) = torch.topk(
-                            c_pred_scores,
-                            k=(
-                                c_pred_idx.shape[0]
-                                if topk > c_pred_idx.shape[0]
-                                else topk
-                            ),
-                            dim=0,
-                        )
-                        final_preds_4c = torch.index_select(c_pred_idx, 0, indices)
-                        final_preds.append(final_preds_4c)
+                    #     (values, indices) = torch.topk(
+                    #         c_pred_scores,
+                    #         k=(
+                    #             c_pred_idx.shape[0]
+                    #             if topk > c_pred_idx.shape[0]
+                    #             else topk
+                    #         ),
+                    #         dim=0,
+                    #     )
+                    #     final_preds_4c = torch.index_select(c_pred_idx, 0, indices)
+                    #     final_preds.append(final_preds_4c)
 
-                    final_preds = torch.cat(final_preds, dim=0)
-                    # end of choosing top-k
+                    # final_preds = torch.cat(final_preds, dim=0)
+
+                    """
+                    Option 2: filter by score
+                    """
+                    final_preds = torch.nonzero(
+                        sum(pred_classes == i for i in novel_classes_ordinal)
+                        & (scores > 0.2)
+                    ).squeeze()  # indices of all novel predictions
 
                     scores = torch.index_select(scores, 0, final_preds)
                     pred_classes = torch.index_select(pred_classes, 0, final_preds)

@@ -182,9 +182,6 @@ class Trainer(DefaultTrainer):
                         evaluation_dataset, shot, test_keepclasses, test_seeds
                     )
 
-                print("-cfg--------------------------------")
-                print(cfg)
-                exit()
                 results_i = inference_on_dataset(
                     model, data_loader, evaluator, dataset_name
                 )
@@ -239,9 +236,6 @@ def main(args):
 
 if __name__ == "__main__":
     parser = default_argument_parser()
-    parser.add_argument(
-        "--mvtec_category", default="", type=str, help="fine-tuning mvtec category"
-    )
     args = parser.parse_args()
     print("Command Line Args:", args)
     launch(
