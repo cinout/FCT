@@ -166,7 +166,7 @@ class Trainer(DefaultTrainer):
                 test_shots = [cfg.INPUT.FS.SUPPORT_SHOT]
                 test_shots_join = set(test_shots)
 
-            print("================== test_shots_join=", test_shots_join)
+            print("===== test_shots_join=", test_shots_join)
             for shot in test_shots_join:
                 print(
                     "evaluating {}.{} for {} shot".format(
@@ -182,6 +182,9 @@ class Trainer(DefaultTrainer):
                         evaluation_dataset, shot, test_keepclasses, test_seeds
                     )
 
+                print("-cfg--------------------------------")
+                print(cfg)
+                exit()
                 results_i = inference_on_dataset(
                     model, data_loader, evaluator, dataset_name
                 )

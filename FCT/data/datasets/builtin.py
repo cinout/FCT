@@ -170,26 +170,40 @@ def register_all_pascal_voc(root="datasets"):
 
 
 def register_all_mvtecvoc(root="datasets"):
+    categories = [
+        "breakfast_box",
+        "juice_bottle",
+        "pushpins",
+        "screw_bag",
+        "splicing_connectors",
+    ]
+
     METASPLITS = [
         ("mvtecvoc_trainval_base", "mvtecvoc", "trainval", "base"),
-        ("mvtecvoc_test_all", "mvtecvoc", "test", "base_novel"),
+        *[
+            ((f"mvtecvoc_test_all_{c}", "mvtecvoc", "test", "base_novel"))
+            for c in categories
+        ],
     ]
 
     # register small meta datasets for fine-tuning stage
     for prefix in ["all", "novel"]:
-        for shot in [1, 2, 3, 5]:  # FIXME: add 10 shots
-            for seed in range(1):  # FIXME: other seeds
-                seed = "" if seed == 0 else "_seed{}".format(seed)
-                name = "mvtecvoc_trainval_{}_{}shot{}".format(prefix, shot, seed)
-                dirname = "mvtecvoc"
-                file_split = "{}_{}shot_trainval".format(prefix, shot)
-                keepclasses = "base_novel" if prefix == "all" else "novel"
-                METASPLITS.append((name, dirname, file_split, keepclasses))
+        for shot in [1, 2, 3, 5]:  # FIXME[DONE]: add 10 shots
+            for seed in range(1):  # FIXME[DONE]: other seeds
+                for category in categories:
+                    seed = "" if seed == 0 else "_seed{}".format(seed)
+                    name = "{}_mvtecvoc_trainval_{}_{}shot{}".format(
+                        category, prefix, shot, seed
+                    )
+                    dirname = "mvtecvoc"
+                    file_split = "{}_{}_{}shot_trainval".format(category, prefix, shot)
+                    keepclasses = "base_novel" if prefix == "all" else "novel"
+                    METASPLITS.append((name, dirname, file_split, keepclasses))
 
     for name, dirname, split, keepclasses in METASPLITS:
         register_meta_mvtecvoc(
             name,
-            _get_builtin_metadata_mvtecvoc("mvtecvoc_fewshot"),
+            _get_builtin_metadata_mvtecvoc("mvtecvoc_fewshot", split),
             os.path.join(root, dirname),
             split,
             keepclasses,

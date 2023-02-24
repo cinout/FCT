@@ -1,5 +1,29 @@
 import torch
 
+categories = [
+    "breakfast_box",
+    "juice_bottle",
+    "pushpins",
+    "screw_bag",
+    "splicing_connectors",
+]
+METASPLITS = [
+    ("mvtecvoc_trainval_base", "mvtecvoc", "trainval", "base"),
+    *[
+        ((f"mvtecvoc_test_all_{c}", "mvtecvoc", "test", "base_novel"))
+        for c in categories
+    ],
+]
+
+name = "mvtecvoc_test_all_happy_b"
+aa = name.split("mvtecvoc_test_all_")[-1]
+print(aa)
+exit()
+
+category = "va_gs_mvtecvoc_00".split("_mvtecvoc_")[0]
+
+print(category)
+
 base_classes = [
     "aeroplane",
     "bicycle",
@@ -259,7 +283,6 @@ for c in novel_classes:
     c_pred_idx = torch.nonzero(pred_classes == c_ordinal).squeeze()
     c_pred_scores = torch.index_select(scores, 0, c_pred_idx)
 
-    # FIXME: other categories
     if c == "orange":
         topk = 2
     else:
