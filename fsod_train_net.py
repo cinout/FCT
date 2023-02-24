@@ -9,13 +9,16 @@ This script is a simplified version of the training script in detectron2/tools.
 @author: Guangxing Han
 """
 
+from fsdet.evaluation import (
+    inference_on_dataset,
+)
+
+from fsdet.engine import DefaultTrainer
 
 import os
-
 from detectron2.checkpoint import DetectionCheckpointer
 from detectron2.config import get_cfg
 from detectron2.engine import (
-    DefaultTrainer,
     default_argument_parser,
     default_setup,
     launch,
@@ -26,9 +29,7 @@ from detectron2.evaluation import (
     print_csv_format,
     verify_results,
 )
-from fsdet.evaluation import (
-    inference_on_dataset,
-)
+
 
 from FCT.config import get_cfg
 from FCT.data import (
@@ -63,7 +64,6 @@ class Trainer(DefaultTrainer):
         It calls :func:`detectron2.data.build_detection_train_loader` with a customized
         DatasetMapper, which adds categorical labels as a semantic mask.
         """
-        print(f">>>>>>>>>>> arrive D")
         if "coco" in cfg.DATASETS.TRAIN[0]:
             mapper = DatasetMapperWithSupportCOCO(cfg)
         elif "mvtecvoc" in cfg.DATASETS.TRAIN[0]:
@@ -234,7 +234,6 @@ def main(args):
     trainer = Trainer(cfg)
     print(f">>>>>>>>>>> arrive B")
     trainer.resume_or_load(resume=args.resume)
-    print(f">>>>>>>>>>> arrive C")
     return trainer.train()
 
 
