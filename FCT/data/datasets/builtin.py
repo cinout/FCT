@@ -185,7 +185,7 @@ def register_all_mvtecvoc(root="datasets"):
             "trainval",
             "breakfast_box",
             "base",
-        ),  # FIXME: the breakfast_box can be substituted with any other class, as only base classes are needed, and we treat base classes the same for each mvtec category
+        ),  # FIXME[DONE]: the breakfast_box can be substituted with any other class, as only base classes are needed, and we treat base classes the same for each mvtec category
         *[
             ((f"mvtecvoc_test_all_{c}", "mvtecvoc", "test", c, "base_novel"))
             for c in categories
