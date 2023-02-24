@@ -105,7 +105,7 @@ class DatasetEvaluators(DatasetEvaluator):
 
 
 def inference_on_dataset(model, data_loader, evaluator, dataset_name):
-    # FIXME: called in evaluation stage of training/fine-tuning
+    # FIXME[DONE]: called in evaluation stage of training/fine-tuning
     """
     Run model on the data_loader and evaluate the metrics with evaluator.
     The model will be used in eval mode.
@@ -145,8 +145,7 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
     total_compute_time = 0
     total_eval_time = 0
     metadata = MetadataCatalog.get(dataset_name)
-    print("-------metadata--------")
-    print(metadata)
+    category_name = dataset_name.split("mvtecvoc_test_all_")[-1]
     with ExitStack() as stack:
         if isinstance(model, nn.Module):
             stack.enter_context(inference_context(model))
@@ -167,7 +166,7 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
                 torch.cuda.synchronize()
             total_compute_time += time.perf_counter() - start_compute_time
 
-            # FIXME: update code here to give visual outputs
+            # FIXME[DONE]: update code here to give visual outputs
             for input, output in zip(inputs, outputs):
                 image = read_image(input["file_name"], format="BGR")
                 image = image[:, :, ::-1]
@@ -179,15 +178,10 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
                     # base_classes = metadata["base_classes"]
                     novel_classes = metadata.get("novel_classes")
                     all_classes = metadata.get("thing_classes")
-                    print("-------novel_classes--------")
-                    print(novel_classes)
-                    print("-------all_classes--------")
-                    print(all_classes)
-
-                    exit()
                     novel_classes_ordinal = [
                         all_classes.index(c) for c in novel_classes
                     ]
+                    
                     pred_classes = instances.pred_classes
                     scores = instances.scores
                     boxes = instances.pred_boxes.tensor
@@ -248,15 +242,16 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
                         predictions=novel_instances
                     )
 
-                os.makedirs("test_vis_output", exist_ok=True)
+                os.makedirs(f"test_vis_output_{category_name}", exist_ok=True)
                 vis_output.save(
                     os.path.join(
-                        "test_vis_output", os.path.basename(input["file_name"])
+                        f"test_vis_output_{category_name}",
+                        os.path.basename(input["file_name"]),
                     )
                 )
 
             start_eval_time = time.perf_counter()
-            # evaluator.process(inputs, outputs) #FIXME: uncomment me for proper evaluation
+            # evaluator.process(inputs, outputs) #FIXME[DONE]: uncomment me for proper evaluation
             total_eval_time += time.perf_counter() - start_eval_time
 
             iters_after_start = idx + 1 - num_warmup * int(idx >= num_warmup)
@@ -302,7 +297,7 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
         )
     )
 
-    # results = evaluator.evaluate()  #FIXME: uncomment me for proper evaluation
+    # results = evaluator.evaluate()  #FIXME[DONE]: uncomment me for proper evaluation
     results = OrderedDict()
     results["bbox"] = {
         "AP": 0.5,
