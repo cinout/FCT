@@ -293,7 +293,7 @@ if __name__ == "__main__":
     since = time.time()
     support_df = main(split_path, split, keepclasses)
     support_df.to_pickle(
-        os.path.join(split_path, "mvtecvoc_{}_{}.pkl".format(split, keepclasses))
+        os.path.join(split_path, "mvtecvoc_{}_{}.pkl".format(split, keepclasses)) #mvtecvoc_trainval_base.pkl
     )
 
     time_elapsed = time.time() - since

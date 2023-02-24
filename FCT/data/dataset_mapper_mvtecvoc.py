@@ -23,6 +23,14 @@ This file contains the default mapping that's applied to "dataset dicts".
 
 __all__ = ["DatasetMapperWithSupportMVTECVOC"]
 
+categories = [
+    "breakfast_box",
+    "juice_bottle",
+    "pushpins",
+    "screw_bag",
+    "splicing_connectors",
+]
+
 
 class DatasetMapperWithSupportMVTECVOC:
     """
@@ -86,25 +94,34 @@ class DatasetMapperWithSupportMVTECVOC:
             # support_df
             self.support_on = True
             if self.few_shot:
+                
+                train_name = cfg.DATASETS.TRAIN[0]
+
+                # FIXME[DONE]: this is hacking code
+                for c in categories:
+                    if train_name.startswith(c):
+                        train_name = train_name.split(f"{c}_")[-1]
+                        break
+
                 if self.seeds == 0:
                     self.support_df = pd.read_pickle(
-                        "./datasets/mvtecvoc/{}.pkl".format(cfg.DATASETS.TRAIN[0])
+                        "./datasets/mvtecvoc/{}.pkl".format(train_name)
                     )
                     print(
                         "training support_df=./datasets/mvtecvoc/{}.pkl".format(
-                            cfg.DATASETS.TRAIN[0]
+                            train_name
                         )
                     )
                 else:
                     self.support_df = pd.read_pickle(
                         "./datasets/mvtecvoc/seed{}/{}.pkl".format(
-                            self.seeds, cfg.DATASETS.TRAIN[0]
+                            self.seeds, train_name
                         )
                     )
                     print(
                         "training support_df=",
                         "./datasets/mvtecvoc/seed{}/{}.pkl".format(
-                            self.seeds, cfg.DATASETS.TRAIN[0]
+                            self.seeds, train_name
                         ),
                     )
             else:
