@@ -50,6 +50,7 @@ class DatasetMapperWithSupportMVTECVOC:
     """
 
     def __init__(self, cfg, is_train=True):
+        print(">>>>>>>>>>> The mapper is called")
         if cfg.INPUT.CROP.ENABLED and is_train:
             self.crop_gen = T.RandomCrop(cfg.INPUT.CROP.TYPE, cfg.INPUT.CROP.SIZE)
             logging.getLogger(__name__).info(
