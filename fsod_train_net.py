@@ -55,7 +55,7 @@ from collections import OrderedDict
 import detectron2.utils.comm as comm
 from detectron2.utils.logger import setup_logger
 
-from detectron2.utils.logger import _log_api_usage
+# from detectron2.utils.logger import _log_api_usage
 from detectron2.utils.registry import Registry
 
 META_ARCH_REGISTRY = Registry("META_ARCH")  # noqa F401 isort:skip
@@ -67,6 +67,7 @@ and expected to return a `nn.Module` object.
 """
 
 
+# FIXME: remove later
 def build_model(cfg):
     """
     Build the whole model architecture, defined by ``cfg.MODEL.META_ARCHITECTURE``.
@@ -79,7 +80,7 @@ def build_model(cfg):
 
     print(f">>>>>>>>>>> arrive A2")
     model.to(torch.device(cfg.MODEL.DEVICE))
-    _log_api_usage("modeling.meta_arch." + meta_arch)
+    # _log_api_usage("modeling.meta_arch." + meta_arch)
 
     print(f">>>>>>>>>>> arrive A3")
     return model
