@@ -171,10 +171,10 @@ def register_all_pascal_voc(root="datasets"):
 
 def register_all_mvtecvoc(root="datasets"):
     categories = [
+        "screw_bag",
         "breakfast_box",
         "juice_bottle",
         "pushpins",
-        "screw_bag",
         "splicing_connectors",
     ]
 
