@@ -73,7 +73,6 @@ class Trainer(DefaultTrainer):
 
     @classmethod
     def build_test_loader(cls, cfg, dataset_name):
-        # FIXME: called in eval mode only??
         """
         Returns:
             iterable
@@ -94,7 +93,7 @@ class Trainer(DefaultTrainer):
 
     @classmethod
     def build_evaluator(cls, cfg, dataset_name, output_folder=None):
-        # FIXME: just use PascalVOCDetectionEvaluator for mvtecvoc
+        # FIXME[DONE]: just use PascalVOCDetectionEvaluator for mvtecvoc
         if output_folder is None:
             output_folder = os.path.join(cfg.OUTPUT_DIR, "inference")
         if "coco" in dataset_name:
@@ -104,7 +103,6 @@ class Trainer(DefaultTrainer):
 
     @classmethod
     def test(cls, cfg, model, evaluators=None):
-        # FIXME: called in eval mode only??
         """
         Args:
             cfg (CfgNode):
@@ -126,7 +124,7 @@ class Trainer(DefaultTrainer):
 
         results = OrderedDict()
         for idx, dataset_name in enumerate(cfg.DATASETS.TEST):
-            # FIXME: called in evaluation stage of training/fine-tuning (this is where testing happens)
+            # FIXME[DONE]: called in evaluation stage of training/fine-tuning (this is where testing happens)
             data_loader = cls.build_test_loader(cfg, dataset_name)
             # When evaluators are passed in as arguments,
             # implicitly assume that evaluators can be created before data_loader.
@@ -153,7 +151,7 @@ class Trainer(DefaultTrainer):
                 test_keepclasses = cfg.DATASETS.TEST_KEEPCLASSES
             elif "mvtecvoc" in cfg.DATASETS.TRAIN[0]:
                 evaluation_dataset = "mvtecvoc"
-                mvtecvoc_test_shots_set = set([1, 2, 3, 5])  # FIXME: 10
+                mvtecvoc_test_shots_set = set([1, 2, 3, 5])  # FIXME[DONE]: 10
                 test_shots_join = cur_test_shots_set.intersection(
                     mvtecvoc_test_shots_set
                 )

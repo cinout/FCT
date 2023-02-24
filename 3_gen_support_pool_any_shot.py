@@ -21,7 +21,55 @@ import json
 import shutil
 import sys
 import xml.etree.ElementTree as ET
-from FCT.data.datasets.builtin_meta_mvtecvoc import MVTECVOC_ALL_CATEGORIES
+
+MVTECVOC_ALL_CATEGORIES = [
+    "aeroplane",
+    "bicycle",
+    "boat",
+    "bottle",
+    "car",
+    "cat",
+    "chair",
+    "diningtable",
+    "dog",
+    "horse",
+    "person",
+    "pottedplant",
+    "sheep",
+    "train",
+    "tvmonitor",
+    # "bird",
+    # "bus",
+    # "cow",
+    # "motorbike",
+    # "sofa",
+    # FIXME[DONE]: update
+    "nectarine",
+    "orange",
+    "cereal",
+    "almond_mix",
+    "short_screw",
+    "long_screw",
+    "washer",
+    "screw_nut",
+    "pushpin",
+    "clamp_2l",
+    "clamp_2r",
+    "cable_yellow",
+    "clamp_3l",
+    "clamp_3r",
+    "cable_blue",
+    "clamp_5l",
+    "clamp_5r",
+    "cable_red",
+    "juice_banana",
+    "label_banana",
+    "juice_orange",
+    "label_orange",
+    "juice_cherry",
+    "label_cherry",
+    "label_100",
+]
 
 
 def vis_image(im, bboxs, im_name):
@@ -314,7 +362,7 @@ if __name__ == "__main__":
     keepclasses = "all"
     split_path = "datasets/mvtecvoc"
 
-    for shot in [1, 2, 3, 5]:  # FIXME: 10
+    for shot in [1, 2, 3, 5]:  # FIXME[DONE]: 10
         print(">>> keepclasses={},  shot={}".format(keepclasses, shot))
 
         since = time.time()

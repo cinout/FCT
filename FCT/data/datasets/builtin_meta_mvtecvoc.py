@@ -23,7 +23,6 @@ MVTECVOC_ALL_CATEGORIES = [
     "sheep",
     "train",
     "tvmonitor",
-    # FIXME: update
     # "bird",
     # "bus",
     # "cow",
@@ -33,6 +32,28 @@ MVTECVOC_ALL_CATEGORIES = [
     "orange",
     "cereal",
     "almond_mix",
+    # FIXME: update
+    "short_screw",
+    "long_screw",
+    "washer",
+    "screw_nut",
+    "pushpin",
+    "clamp_2l",
+    "clamp_2r",
+    "cable_yellow",
+    "clamp_3l",
+    "clamp_3r",
+    "cable_blue",
+    "clamp_5l",
+    "clamp_5r",
+    "cable_red",
+    "juice_banana",
+    "label_banana",
+    "juice_orange",
+    "label_orange",
+    "juice_cherry",
+    "label_cherry",
+    "label_100",
 ]
 
 # FIXME: update

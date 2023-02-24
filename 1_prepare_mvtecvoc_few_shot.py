@@ -115,7 +115,7 @@ VOC_CLASSES = [
     "juice_cherry",
     "label_cherry",
     "label_100",
-     # FIXME: update (append instead of replacing)
+    # FIXME[DONE]: update (append instead of replacing)
 ]
 
 
@@ -149,7 +149,7 @@ def generate_seeds():
             )  # all annotation file paths by classname
 
     result = {cls: {} for cls in data_per_cat.keys()}
-    shots = [1, 2, 3, 5]  # FIXME: change later [1, 2, 3, 5, 10]
+    shots = [1, 2, 3, 5]  # FIXME[DONE]: change later [1, 2, 3, 5, 10]
 
     # we don't care seeds here, refer to prepare_pascol_xxx.py if you want to use different seeds
     random.seed(0)
