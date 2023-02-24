@@ -2,7 +2,7 @@ _BASE_: "Base-FSOD-C4.yaml"
 MODEL:
   PIXEL_MEAN: [103.530, 116.280, 123.675]
   PIXEL_STD: [57.375, 57.120, 58.395]
-  WEIGHTS: "./output/model_final.pth" #FIXME: change back
+  WEIGHTS: "./output/fsod/two_branch_training_pascalvoc_split1_pvt_v2_b2_li/model_final.pth"
   MASK_ON: False
   RESNETS:
     DEPTH: 101
