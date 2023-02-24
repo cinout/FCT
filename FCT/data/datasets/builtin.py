@@ -199,22 +199,18 @@ def register_all_mvtecvoc(root="datasets"):
     # register small meta datasets for fine-tuning stage
     for prefix in ["all", "novel"]:
         for shot in [1, 2, 3, 5]:  # FIXME[DONE]: add 10 shots
-            for seed in range(1):  # FIXME[DONE]: other seeds
-                for category in categories:
-                    seed = "" if seed == 0 else "_seed{}".format(seed)
-                    name = "{}_mvtecvoc_trainval_{}_{}shot{}".format(
-                        category, prefix, shot, seed
-                    )
-                    dirname = "mvtecvoc"
-                    file_split = "{}_{}shot_trainval".format(prefix, shot)
-                    keepclasses = "base_novel" if prefix == "all" else "novel"
-                    METASPLITS.append(
-                        (name, dirname, file_split, category, keepclasses)
-                    )
+            # for seed in range(1):  # FIXME[DONE]: other seeds
+            for category in categories:
+                # seed = "" if seed == 0 else "_seed{}".format(seed)
+                name = "{}_mvtecvoc_trainval_{}_{}shot".format(category, prefix, shot)
+                dirname = "mvtecvoc"
+                file_split = "{}_{}_{}shot_trainval".format(category, prefix, shot)
+                keepclasses = "base_novel" if prefix == "all" else "novel"
+                METASPLITS.append((name, dirname, file_split, category, keepclasses))
 
     print(">>>>>>>>>> METASPLITS [AFTER]")
     print(METASPLITS)
-    
+
     for name, dirname, split, category, keepclasses in METASPLITS:
         register_meta_mvtecvoc(
             name,
