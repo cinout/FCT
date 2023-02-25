@@ -221,7 +221,7 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
                     """
                     final_preds = torch.nonzero(
                         sum(pred_classes == i for i in novel_classes_ordinal)
-                        & (scores > 0.2)
+                        # & (scores > 0.2) #FIXME: uncomment
                     ).squeeze()  # indices of all novel predictions
 
                     scores = torch.index_select(scores, 0, final_preds)
