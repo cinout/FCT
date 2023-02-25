@@ -242,11 +242,19 @@ class FsodRCNN(nn.Module):
             # positive support branch ##################################
             pos_begin = i * self.support_shot * self.support_way
             begin_rel = 0
+            print("_______________batched_inputs[i]['support_cls']")
+            print(len(batched_inputs[i]["support_cls"]))
+            print(batched_inputs[i]["support_cls"])
             for idx in range(begin_rel + 1, len(batched_inputs[i]["support_cls"])):
+                print("________________batched_inputs[i]['support_cls'][idx]")
+                print(batched_inputs[i]["support_cls"][idx])
+                print("________________batched_inputs[i]['support_cls'][begin_rel]")
+                print(batched_inputs[i]["support_cls"][begin_rel])
                 if (
                     batched_inputs[i]["support_cls"][idx]
                     != batched_inputs[i]["support_cls"][begin_rel]
                 ):
+                    print("++++++++++++hit++++++++")
                     break
             pos_end = pos_begin + idx
             print("________________idx")
