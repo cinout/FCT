@@ -233,16 +233,12 @@ class FsodRCNN(nn.Module):
             pos_begin = i * self.support_shot * self.support_way
             begin_rel = 0
 
-            hit_class_update = False  # FIXME[DONE]: my fix
             for idx in range(begin_rel + 1, len(batched_inputs[i]["support_cls"])):
                 if (
                     batched_inputs[i]["support_cls"][idx]
                     != batched_inputs[i]["support_cls"][begin_rel]
                 ):
-                    hit_class_update = True
                     break
-            if not hit_class_update:
-                idx += 1
             pos_end = pos_begin + idx
 
             support_features_res4 = features_dict[i][0]["res4"][

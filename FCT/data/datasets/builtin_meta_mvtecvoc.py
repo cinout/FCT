@@ -82,7 +82,7 @@ MVTECVOC_ALL_CATEGORIES = {
         # "bird",
         # "bus",
         # "cow",
-        # "motorbike",
+        "motorbike",
         # "sofa",
         "pushpin",
     ],
@@ -163,6 +163,7 @@ MVTECVOC_NOVEL_CATEGORIES = {
         "label_100",
     ],
     "pushpins": [
+        "motorbike", # to create at least 2 ways (for pos/neg branches)
         "pushpin",
     ],
     "screw_bag": [
