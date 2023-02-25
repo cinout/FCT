@@ -183,9 +183,18 @@ class FsodRCNN(nn.Module):
 
         support_images = support_images.tensor.reshape(B * N, C, H, W)
         features_dict = {}
+        print("________________self.support_shot")
+        print(self.support_shot)
+        print("________________self.support_way")
+        print(self.support_way)
         for b_1 in range(images.tensor.shape[0]):
             features_dict[b_1] = {}
             pos_end = b_1 * self.support_shot * self.support_way
+            print("________________b_1")
+            print(b_1)
+            print("________________pos_end[1]")
+            print(pos_end)
+
             for b_2 in range(self.support_way):
                 pos_begin = pos_end
                 begin_rel = pos_begin - b_1 * self.support_shot * self.support_way
@@ -204,8 +213,12 @@ class FsodRCNN(nn.Module):
                     != batched_inputs[b_1]["support_cls"][begin_rel]
                 ):
                     pos_end = b_1 * self.support_shot * self.support_way + idx
+                    print("________________pos_end[2]")
+                    print(pos_end)
                 else:
                     pos_end = b_1 * self.support_shot * self.support_way + idx + 1
+                    print("________________pos_end[3]")
+                    print(pos_end)
 
                 features_dict[b_1][b_2] = self.backbone.forward_with_two_branch(
                     images.tensor[b_1, :].unsqueeze(0),
@@ -236,8 +249,14 @@ class FsodRCNN(nn.Module):
                 ):
                     break
             pos_end = pos_begin + idx
+            print("________________idx")
+            print(idx)
+            print("________________pos_end[4]")
+            print(pos_end)
 
-            support_features_res4 = features_dict[i][0]["res4"][1]
+            support_features_res4 = features_dict[i][0]["res4"][
+                1
+            ]  # shape: torch.Size([5, 320, 20, 20])
             support_features = {"res4": support_features_res4}
 
             # print(f"support_features_res4.shape: {support_features_res4.shape}")
