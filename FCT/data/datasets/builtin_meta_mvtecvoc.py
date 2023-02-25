@@ -83,7 +83,7 @@ MVTECVOC_ALL_CATEGORIES = {
         # "bus",
         # "cow",
         "motorbike",
-        # "sofa",
+        "sofa",
         "pushpin",
     ],
     "screw_bag": [
@@ -163,8 +163,9 @@ MVTECVOC_NOVEL_CATEGORIES = {
         "label_100",
     ],
     "pushpins": [
-        "motorbike", # to create at least 2 ways (for pos/neg branches)
         "pushpin",
+        "motorbike",  # to create at least 2 ways (for pos/neg branches)
+        "sofa",
     ],
     "screw_bag": [
         "short_screw",
