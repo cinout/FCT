@@ -259,10 +259,10 @@ class FsodRCNN(nn.Module):
             ]  # shape: torch.Size([5, 320, 20, 20])
             support_features = {"res4": support_features_res4}
 
-            # print(f"support_features_res4.shape: {support_features_res4.shape}")
-            # print(f"support_bboxes_ls: {support_bboxes_ls}")
-            # print(f"pos_begin: {pos_begin}")
-            # print(f"pos_end: {pos_end}")
+            print(f"support_features_res4.shape: {support_features_res4.shape}")
+            print(f"support_bboxes_ls: {support_bboxes_ls}")
+            print(f"pos_begin: {pos_begin}")
+            print(f"pos_end: {pos_end}")
 
             pos_support_features = self.roi_heads.roi_pooling(
                 support_features, support_bboxes_ls[pos_begin:pos_end]
