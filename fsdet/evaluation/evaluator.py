@@ -242,10 +242,10 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
                         predictions=novel_instances
                     )
 
-                os.makedirs(f"test_vis_output_{category_name}", exist_ok=True)
+                os.makedirs(f"test_{category_name}", exist_ok=True)
                 vis_output.save(
                     os.path.join(
-                        f"test_vis_output_{category_name}",
+                        f"test_{category_name}",
                         os.path.basename(input["file_name"]),
                     )
                 )
