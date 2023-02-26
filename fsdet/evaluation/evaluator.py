@@ -147,7 +147,7 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
     metadata = MetadataCatalog.get(dataset_name)
     category_name = dataset_name.split("mvtecvoc_test_all_")[-1]
 
-    output_dir_name = f"val_{category_name}"  # FIXME: update
+    output_dir_name = f"test_{category_name}"  # FIXME: val or test
     os.makedirs(output_dir_name, exist_ok=True)
 
     with ExitStack() as stack:

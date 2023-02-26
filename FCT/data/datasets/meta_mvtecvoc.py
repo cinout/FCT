@@ -125,7 +125,7 @@ def load_filtered_mvtecvoc_instances(
         if name.startswith("mvtecvoc_test_all"):  # FIXME[DONE]: update
             category_name = name.split("mvtecvoc_test_all_")[-1]
 
-            visual_split = "val"  # FIXME: val or test
+            visual_split = "test"  # FIXME: val or test
             test_samples_path = os.path.join(
                 "datasets/mvtec_loco_ad",
                 category_name,
