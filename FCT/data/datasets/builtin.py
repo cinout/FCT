@@ -170,7 +170,6 @@ def register_all_pascal_voc(root="datasets"):
 
 
 def register_all_mvtecvoc(root="datasets"):
-    # FIXME: this is where the error stems from
     categories = [
         "screw_bag",
         "breakfast_box",

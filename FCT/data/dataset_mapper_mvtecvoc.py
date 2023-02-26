@@ -96,7 +96,7 @@ class DatasetMapperWithSupportMVTECVOC:
             if self.few_shot:
                 train_name = cfg.DATASETS.TRAIN[0]
 
-                # FIXME[DONE]: this is hacking code
+                # FIXME[DONE]: this is hacking code (trying to remove category name to use the general pkl file)
                 for c in categories:
                     if train_name.startswith(c):
                         train_name = train_name.split(f"{c}_")[-1]
