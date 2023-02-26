@@ -146,6 +146,10 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
     total_eval_time = 0
     metadata = MetadataCatalog.get(dataset_name)
     category_name = dataset_name.split("mvtecvoc_test_all_")[-1]
+
+    output_dir_name = f"val_{category_name}"  # FIXME: update
+    os.makedirs(output_dir_name, exist_ok=True)
+
     with ExitStack() as stack:
         if isinstance(model, nn.Module):
             stack.enter_context(inference_context(model))
@@ -181,7 +185,7 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
                     novel_classes_ordinal = [
                         all_classes.index(c) for c in novel_classes
                     ]
-                    
+
                     pred_classes = instances.pred_classes
                     scores = instances.scores
                     boxes = instances.pred_boxes.tensor
@@ -221,7 +225,7 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
                     """
                     final_preds = torch.nonzero(
                         sum(pred_classes == i for i in novel_classes_ordinal)
-                        & (scores > 0.2) #FIXME: uncomment
+                        & (scores > 0.2)  # FIXME: uncomment
                     ).squeeze()  # indices of all novel predictions
 
                     scores = torch.index_select(scores, 0, final_preds)
@@ -242,10 +246,9 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
                         predictions=novel_instances
                     )
 
-                os.makedirs(f"test_{category_name}", exist_ok=True)
                 vis_output.save(
                     os.path.join(
-                        f"test_{category_name}",
+                        output_dir_name,
                         os.path.basename(input["file_name"]),
                     )
                 )

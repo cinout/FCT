@@ -125,13 +125,13 @@ def load_filtered_mvtecvoc_instances(
         if name.startswith("mvtecvoc_test_all"):  # FIXME[DONE]: update
             category_name = name.split("mvtecvoc_test_all_")[-1]
 
-            # FIXME: manual path (use validation split for now, in the future, we need to use test split)
+            visual_split = "val"  # FIXME: val or test
             test_samples_path = os.path.join(
-                "datasets/mvtec_loco_ad", category_name, "test", "logical_anomalies"
+                "datasets/mvtec_loco_ad",
+                category_name,
+                "validation" if visual_split == "val" else "test",
+                "good" if visual_split == "val" else "logical_anomalies",
             )
-            # test_samples_path = os.path.join(
-            #     "datasets/mvtec_loco_ad", category_name, "validation", "good"
-            # )
 
             if category_name == "breakfast_box":
                 height = 1280
