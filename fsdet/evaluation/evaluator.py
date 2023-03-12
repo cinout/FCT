@@ -163,6 +163,7 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
     output_dir_name = f"train_{category_name}"  # FIXME: train, validation, or test
     os.makedirs(output_dir_name, exist_ok=True)
 
+    prediction_output = []
     with ExitStack() as stack:
         if isinstance(model, nn.Module):
             stack.enter_context(inference_context(model))
@@ -185,6 +186,8 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
 
             # FIXME[DONE]: update code here to give visual outputs
             for input, output in zip(inputs, outputs):
+                print(input)
+                exit()
                 image = read_image(input["file_name"], format="BGR")
                 image = image[:, :, ::-1]
 
@@ -242,10 +245,10 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
                         & (scores > 0.2)  # FIXME: score confidence threshold
                     ).squeeze()  # a tensor of indices of plausible predictions
 
-                    # FIXME: high IoU filtering
+                    # high IoU filtering
                     cand_preds_count = candidate_preds.shape[0]
                     remove_indices = set()
-                    iou_threshold = 0.75  # FIXME[DONE]: choose threshold
+                    iou_threshold = 0.6  # FIXME: choose threshold
 
                     for i in range(cand_preds_count - 1):
                         for j in range(i + 1, cand_preds_count):

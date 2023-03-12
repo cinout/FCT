@@ -351,35 +351,3 @@ pred_classes = torch.tensor(
         18,
     ]
 )
-
-
-candidate_preds = torch.nonzero(
-    sum(pred_classes == i for i in novel_classes_ordinal)
-    & (scores > 0.2)  # FIXME: score confidence threshold
-).squeeze()  # a tensor of indices of plausible predictions
-
-
-cand_preds_count = candidate_preds.shape[0]
-
-remove_indices = set()
-
-iou_threshold = 0.75  # FIXME[DONE]: choose threshold
-
-for i in range(cand_preds_count - 1):
-    for j in range(i + 1, cand_preds_count):
-        if (i in remove_indices) or (j in remove_indices):
-            continue
-        score_i = scores[candidate_preds[i]]
-        score_j = scores[candidate_preds[j]]
-        box_i = boxes[candidate_preds[i]]
-        box_j = boxes[candidate_preds[j]]
-
-        intersection_area = rec_intersection(box_i, box_j)
-        union_area = rec_area(box_i) + rec_area(box_j) - intersection_area
-
-        if intersection_area / union_area > iou_threshold:
-            remove_indices.add(j if score_i >= score_j else i)
-
-keep_preds = set(range(cand_preds_count)) - remove_indices
-
-final_preds = torch.index_select(candidate_preds, 0, torch.tensor(list(keep_preds)))
