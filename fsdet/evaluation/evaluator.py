@@ -285,9 +285,11 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
                     pred_classes = torch.index_select(pred_classes, 0, final_preds)
                     boxes = torch.index_select(boxes, 0, final_preds)
 
-                    # FIXME:TODO update pred_out
+                    # update pred_out
                     pred_out["scores"] = scores.detach().tolist()
-                    pred_out["pred_classes"] = pred_classes.detach().tolist()
+                    pred_out["pred_classes"] = [
+                        all_classes[i] for i in pred_classes.detach().tolist()
+                    ]
                     pred_out["boxes"] = boxes.detach().tolist()
 
                     novel_instances = detectron2.structures.Instances(
@@ -313,8 +315,8 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
 
                 prediction_output.append(pred_out)
 
-            with open(f"{output_dir_name}.json","w") as f:
-                json.dump(prediction_output,f)
+            with open(f"{output_dir_name}.json", "w") as f:
+                json.dump(prediction_output, f)
 
             start_eval_time = time.perf_counter()
             # evaluator.process(inputs, outputs) #FIXME[DONE]: uncomment me for proper evaluation

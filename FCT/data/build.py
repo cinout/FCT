@@ -252,5 +252,6 @@ def build_detection_test_loader(cfg, dataset_name, mapper=None):
         num_workers=cfg.DATALOADER.NUM_WORKERS,
         batch_sampler=batch_sampler,
         collate_fn=trivial_batch_collator,
+        shuffle=False,  # FIXME[DONE]: update
     )
     return data_loader
