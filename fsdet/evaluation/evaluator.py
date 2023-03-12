@@ -1,4 +1,5 @@
 import datetime
+import json
 import logging
 import os
 import time
@@ -160,10 +161,13 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
     metadata = MetadataCatalog.get(dataset_name)
     category_name = dataset_name.split("mvtecvoc_test_all_")[-1]
 
-    output_dir_name = f"train_{category_name}"  # FIXME: train, validation, or test
+    file_split = "train"  # FIXME: train, validation, or test
+
+    output_dir_name = f"{file_split}_{category_name}"
     os.makedirs(output_dir_name, exist_ok=True)
 
     prediction_output = []
+
     with ExitStack() as stack:
         if isinstance(model, nn.Module):
             stack.enter_context(inference_context(model))
@@ -186,9 +190,13 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
 
             # FIXME[DONE]: update code here to give visual outputs
             for input, output in zip(inputs, outputs):
-                print(">>>>>>> input")
-                print(input)
-                exit()
+                pred_out = {
+                    "category": category_name,
+                    "file_split": file_split,
+                    "image_id": input["image_id"],
+                    "height": input["height"],
+                    "width": input["width"],
+                }
                 image = read_image(input["file_name"], format="BGR")
                 image = image[:, :, ::-1]
 
@@ -277,6 +285,11 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
                     pred_classes = torch.index_select(pred_classes, 0, final_preds)
                     boxes = torch.index_select(boxes, 0, final_preds)
 
+                    # FIXME:TODO update pred_out
+                    pred_out["scores"] = scores.detach().tolist()
+                    pred_out["pred_classes"] = pred_classes.detach().tolist()
+                    pred_out["boxes"] = boxes.detach().tolist()
+
                     novel_instances = detectron2.structures.Instances(
                         image_size=instances.image_size
                     )
@@ -297,6 +310,11 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
                         os.path.basename(input["file_name"]),
                     )
                 )
+
+                prediction_output.append(pred_out)
+
+            with open(f"{output_dir_name}.json","w") as f:
+                json.dump(prediction_output,f)
 
             start_eval_time = time.perf_counter()
             # evaluator.process(inputs, outputs) #FIXME[DONE]: uncomment me for proper evaluation
