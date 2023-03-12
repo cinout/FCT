@@ -186,6 +186,7 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
 
             # FIXME[DONE]: update code here to give visual outputs
             for input, output in zip(inputs, outputs):
+                print(">>>>>>> input")
                 print(input)
                 exit()
                 image = read_image(input["file_name"], format="BGR")
