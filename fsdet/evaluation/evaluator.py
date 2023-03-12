@@ -147,7 +147,7 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
     metadata = MetadataCatalog.get(dataset_name)
     category_name = dataset_name.split("mvtecvoc_test_all_")[-1]
 
-    output_dir_name = f"test_{category_name}"  # FIXME: val or test
+    output_dir_name = f"train_{category_name}"  # FIXME: train, validation, or test
     os.makedirs(output_dir_name, exist_ok=True)
 
     with ExitStack() as stack:
@@ -186,6 +186,7 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
                         all_classes.index(c) for c in novel_classes
                     ]
 
+                    # The following three variables are all tensors
                     pred_classes = instances.pred_classes
                     scores = instances.scores
                     boxes = instances.pred_boxes.tensor
@@ -225,8 +226,10 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
                     """
                     final_preds = torch.nonzero(
                         sum(pred_classes == i for i in novel_classes_ordinal)
-                        & (scores > 0.2)  # FIXME: uncomment
+                        & (scores > 0.2)  # FIXME: score confidence threshold
                     ).squeeze()  # indices of all novel predictions
+
+                    # FIXME: high IoU filtering
 
                     scores = torch.index_select(scores, 0, final_preds)
                     pred_classes = torch.index_select(pred_classes, 0, final_preds)
