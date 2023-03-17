@@ -163,7 +163,7 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
 
     file_split = "test"  # FIXME: train, validation, or test
 
-    output_dir_name = f"{file_split}_{category_name}"
+    output_dir_name = f"{file_split}_{category_name}"  #FIXME: when test, we need to differentiate "good, structural_anomalies, logical_anomalies"
     os.makedirs(output_dir_name, exist_ok=True)
 
     prediction_output = []
