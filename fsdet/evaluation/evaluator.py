@@ -161,7 +161,7 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
     metadata = MetadataCatalog.get(dataset_name)
     category_name = dataset_name.split("mvtecvoc_test_all_")[-1]
 
-    file_split = "train"  # FIXME: train, validation, or test
+    file_split = "test"  # FIXME: train, validation, or test
 
     output_dir_name = f"{file_split}_{category_name}"
     os.makedirs(output_dir_name, exist_ok=True)
