@@ -162,8 +162,9 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
     category_name = dataset_name.split("mvtecvoc_test_all_")[-1]
 
     file_split = "test"  # FIXME: train, validation, or test
+    anomaly_type="logical_anomalies" #FIXME:  good (for train too), structural_anomalies, logical_anomalies
 
-    output_dir_name = f"{file_split}_{category_name}"  #FIXME: when test, we need to differentiate "good, structural_anomalies, logical_anomalies"
+    output_dir_name = f"{file_split}_{anomaly_type}_{category_name}"
     os.makedirs(output_dir_name, exist_ok=True)
 
     prediction_output = []
@@ -193,6 +194,7 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
                 pred_out = {
                     "category": category_name,
                     "file_split": file_split,
+                    "anomaly_type":anomaly_type,
                     "image_id": input["image_id"],
                     "height": input["height"],
                     "width": input["width"],
@@ -315,7 +317,7 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
 
                 prediction_output.append(pred_out)
 
-            with open(f"{output_dir_name}.json", "w") as f:
+            with open(os.path.join(output_dir_name,f"{output_dir_name}.json") , "w") as f:
                 json.dump(prediction_output, f)
 
             start_eval_time = time.perf_counter()
