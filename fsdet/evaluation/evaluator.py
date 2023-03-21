@@ -284,14 +284,30 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
                             if intersection_area / union_area > iou_threshold:
                                 remove_indices.add(j if score_i >= score_j else i)
 
-                    keep_preds = set(range(cand_preds_count)) - remove_indices
-                    final_preds = torch.index_select(
-                        candidate_preds, 0, torch.tensor(list(keep_preds))
+                    keep_preds = list(set(range(cand_preds_count)) - remove_indices)
+                    final_preds = (
+                        torch.tensor([])
+                        if keep_preds == []
+                        else torch.index_select(
+                            candidate_preds, 0, torch.tensor(keep_preds)
+                        )
                     )
 
-                    scores = torch.index_select(scores, 0, final_preds)
-                    pred_classes = torch.index_select(pred_classes, 0, final_preds)
-                    boxes = torch.index_select(boxes, 0, final_preds)
+                    scores = (
+                        torch.tensor([])
+                        if keep_preds == []
+                        else torch.index_select(scores, 0, final_preds)
+                    )
+                    pred_classes = (
+                        torch.tensor([])
+                        if keep_preds == []
+                        else torch.index_select(pred_classes, 0, final_preds)
+                    )
+                    boxes = (
+                        torch.tensor([])
+                        if keep_preds == []
+                        else torch.index_select(boxes, 0, final_preds)
+                    )
 
                     # update pred_out
                     pred_out["scores"] = scores.detach().tolist()

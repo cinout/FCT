@@ -353,7 +353,6 @@ pred_classes = torch.tensor(
     ]
 )
 
-final_preds = torch.index_select(pred_classes, 0, torch.tensor([]))
-# final_preds = torch.index_select(pred_classes, 0, torch.tensor(list(set())))
-print([] == [])
+final_preds = torch.tensor([]).detach().tolist()
+
 print(final_preds)
