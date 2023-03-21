@@ -161,8 +161,10 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
     metadata = MetadataCatalog.get(dataset_name)
     category_name = dataset_name.split("mvtecvoc_test_all_")[-1]
 
-    file_split = "test"  # FIXME: train, validation, or test
-    anomaly_type="logical_anomalies" #FIXME:  good (for train too), structural_anomalies, logical_anomalies
+    file_split = "train"  # FIXME: train, validation, or test
+    anomaly_type = (
+        "good" if file_split in ["validation", "train"] else "logical_anomalies"
+    )  # FIXME:  good, structural_anomalies, logical_anomalies
 
     output_dir_name = f"{file_split}_{anomaly_type}_{category_name}"
     os.makedirs(output_dir_name, exist_ok=True)
@@ -194,7 +196,7 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
                 pred_out = {
                     "category": category_name,
                     "file_split": file_split,
-                    "anomaly_type":anomaly_type,
+                    "anomaly_type": anomaly_type,
                     "image_id": input["image_id"],
                     "height": input["height"],
                     "width": input["width"],
@@ -206,8 +208,11 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
                 if "instances" in output:
                     instances = output["instances"].to(torch.device("cpu"))
 
-                    # base_classes = metadata["base_classes"]
-                    novel_classes = metadata.get("novel_classes")
+                    novel_classes = (
+                        ["pushpin"]
+                        if category_name == "pushpins"
+                        else metadata.get("novel_classes")
+                    )
                     all_classes = metadata.get("thing_classes")
                     novel_classes_ordinal = [
                         all_classes.index(c) for c in novel_classes
@@ -228,7 +233,7 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
                     #     c_pred_idx = torch.nonzero(pred_classes == c_ordinal).squeeze()
                     #     c_pred_scores = torch.index_select(scores, 0, c_pred_idx)
 
-                    #     # FIXME: other categories
+                    #     # FIXME[DONE]: other categories
                     #     if c == "orange":
                     #         topk = 2
                     #     else:
@@ -251,16 +256,16 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
                     """
                     Option 2: filter by score
                     """
-                    # FIXME: for pushpin category, we need to remove any prediction of novel classes that do not equal to "pushpin"
+
                     candidate_preds = torch.nonzero(
                         sum(pred_classes == i for i in novel_classes_ordinal)
-                        & (scores > 0.2)  # FIXME: score confidence threshold
+                        & (scores > 0.2)  # FIXME[DONE]: score confidence threshold
                     ).squeeze()  # a tensor of indices of plausible predictions
 
                     # high IoU filtering
                     cand_preds_count = candidate_preds.shape[0]
                     remove_indices = set()
-                    iou_threshold = 0.6  # FIXME: choose threshold
+                    iou_threshold = 0.5  # FIXME[DONE]: choose threshold
 
                     for i in range(cand_preds_count - 1):
                         for j in range(i + 1, cand_preds_count):
@@ -310,15 +315,14 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
                     )
 
                 vis_output.save(
-                    os.path.join(
-                        output_dir_name,
-                        os.path.basename(input["file_name"]),
-                    )
+                    os.path.join(output_dir_name, os.path.basename(input["file_name"]),)
                 )
 
                 prediction_output.append(pred_out)
 
-            with open(os.path.join(output_dir_name,f"{output_dir_name}.json") , "w") as f:
+            with open(
+                os.path.join(output_dir_name, f"{output_dir_name}.json"), "w"
+            ) as f:
                 json.dump(prediction_output, f)
 
             start_eval_time = time.perf_counter()

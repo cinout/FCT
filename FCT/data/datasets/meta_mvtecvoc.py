@@ -125,14 +125,14 @@ def load_filtered_mvtecvoc_instances(
         if name.startswith("mvtecvoc_test_all"):  # FIXME[DONE]: update
             category_name = name.split("mvtecvoc_test_all_")[-1]
 
-            visual_split = "test"  # FIXME: train, validation, or test
+            visual_split = "train"  # FIXME: train, validation, or test
             test_samples_path = os.path.join(
                 "datasets/mvtec_loco_ad",
                 category_name,
                 visual_split,
                 "good"
                 if visual_split in ["validation", "train"]
-                else "structural_anomalies", #FIXME:  good, structural_anomalies, logical_anomalies
+                else "structural_anomalies",  # FIXME:  good, structural_anomalies, logical_anomalies
             )
 
             if category_name == "breakfast_box":
