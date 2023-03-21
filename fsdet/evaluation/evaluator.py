@@ -163,7 +163,7 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
 
     file_split = "test"  # FIXME: train, validation, or test
     anomaly_type = (
-        "good" if file_split in ["validation", "train"] else "logical_anomalies"
+        "good" if file_split in ["validation", "train"] else "structural_anomalies"
     )  # FIXME:  good, structural_anomalies, logical_anomalies
 
     output_dir_name = f"{file_split}_{anomaly_type}_{category_name}"

@@ -132,7 +132,7 @@ def load_filtered_mvtecvoc_instances(
                 visual_split,
                 "good"
                 if visual_split in ["validation", "train"]
-                else "logical_anomalies",  # FIXME:  good, structural_anomalies, logical_anomalies
+                else "structural_anomalies",  # FIXME:  good, structural_anomalies, logical_anomalies
             )
 
             if category_name == "breakfast_box":
