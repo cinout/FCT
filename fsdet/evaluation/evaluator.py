@@ -251,6 +251,7 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
                     """
                     Option 2: filter by score
                     """
+                    # FIXME: for pushpin category, we need to remove any prediction of novel classes that do not equal to "pushpin"
                     candidate_preds = torch.nonzero(
                         sum(pred_classes == i for i in novel_classes_ordinal)
                         & (scores > 0.2)  # FIXME: score confidence threshold
