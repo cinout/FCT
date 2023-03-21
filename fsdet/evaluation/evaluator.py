@@ -161,7 +161,7 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
     metadata = MetadataCatalog.get(dataset_name)
     category_name = dataset_name.split("mvtecvoc_test_all_")[-1]
 
-    file_split = "test"  # FIXME: train, validation, or test
+    file_split = "good"  # FIXME: train, validation, or test
     anomaly_type = (
         "good" if file_split in ["validation", "train"] else "logical_anomalies"
     )  # FIXME:  good, structural_anomalies, logical_anomalies
@@ -260,7 +260,7 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
                     candidate_preds = torch.nonzero(
                         sum(pred_classes == i for i in novel_classes_ordinal)
                         & (scores > 0.2)  # FIXME[DONE]: score confidence threshold
-                    ).squeeze()  # a tensor of indices of plausible predictions
+                    ).flatten()  # a tensor of indices of plausible predictions
 
                     # high IoU filtering
                     cand_preds_count = candidate_preds.shape[0]

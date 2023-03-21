@@ -1,5 +1,19 @@
 import torch
 
+# scores = torch.tensor([0, 1, -1])
+# candidate_preds = torch.nonzero(
+#     scores > 1
+# ).squeeze()  # a tensor of indices of plausible predictions
+
+
+# print(candidate_preds)
+# print(candidate_preds.shape[0])
+
+remove_indices = set()
+keep_preds = set(range(-1)) - remove_indices
+print(keep_preds)
+exit()
+
 all_classes = [
     "aeroplane",
     "bicycle",
