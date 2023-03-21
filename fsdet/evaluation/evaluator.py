@@ -161,9 +161,9 @@ def inference_on_dataset(model, data_loader, evaluator, dataset_name):
     metadata = MetadataCatalog.get(dataset_name)
     category_name = dataset_name.split("mvtecvoc_test_all_")[-1]
 
-    file_split = "train"  # FIXME: train, validation, or test
+    file_split = "test"  # FIXME: train, validation, or test
     anomaly_type = (
-        "good" if file_split in ["validation", "train"] else "logical_anomalies"
+        "good" if file_split in ["validation", "train"] else "structural_anomalies"
     )  # FIXME:  good, structural_anomalies, logical_anomalies
 
     output_dir_name = f"{file_split}_{anomaly_type}_{category_name}"
