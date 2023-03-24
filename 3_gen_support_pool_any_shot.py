@@ -359,7 +359,7 @@ if __name__ == "__main__":
     keepclasses = "all"
     split_path = "datasets/mvtecvoc"
 
-    for shot in [1, 2, 3, 5]:  # FIXME[DONE]: 10
+    for shot in [1, 2, 3, 5, 15]:  # FIXME[DONE]: 10
         print(">>> keepclasses={},  shot={}".format(keepclasses, shot))
 
         since = time.time()
