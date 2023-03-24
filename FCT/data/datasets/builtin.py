@@ -194,7 +194,7 @@ def register_all_mvtecvoc(root="datasets"):
 
     # register small meta datasets for fine-tuning stage
     for prefix in ["all", "novel"]:
-        for shot in [1, 2, 3, 5]:  # FIXME[DONE]: add 10 shots
+        for shot in [1, 2, 3, 5, 10, 15]:  # FIXME[DONE]: add 10 shots
             # for seed in range(1):  # FIXME[DONE]: other seeds
             for category in categories:
                 # seed = "" if seed == 0 else "_seed{}".format(seed)

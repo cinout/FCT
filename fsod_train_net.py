@@ -9,9 +9,7 @@ This script is a simplified version of the training script in detectron2/tools.
 @author: Guangxing Han
 """
 
-from fsdet.evaluation import (
-    inference_on_dataset,
-)
+from fsdet.evaluation import inference_on_dataset
 
 # from fsdet.engine import DefaultTrainer
 
@@ -153,7 +151,7 @@ class Trainer(DefaultTrainer):
                 test_keepclasses = cfg.DATASETS.TEST_KEEPCLASSES
             elif "mvtecvoc" in cfg.DATASETS.TRAIN[0]:
                 evaluation_dataset = "mvtecvoc"
-                mvtecvoc_test_shots_set = set([1, 2, 3, 5])  # FIXME[DONE]: 10
+                mvtecvoc_test_shots_set = set([1, 2, 3, 5, 10, 15])  # FIXME[DONE]:
                 test_shots_join = cur_test_shots_set.intersection(
                     mvtecvoc_test_shots_set
                 )
