@@ -112,7 +112,7 @@ def crop_support(img, bbox):
 
     width = x2 - x1
     height = y2 - y1
-    context_pixel = 2  # FIXME: make surrounding smaller???
+    context_pixel = 16
 
     new_x1 = 0
     new_y1 = 0
@@ -360,7 +360,7 @@ if __name__ == "__main__":
     keepclasses = "all"
     split_path = "datasets/mvtecvoc"
 
-    for shot in [1, 2, 3, 5, 10, 15]:  # FIXME[DONE]
+    for shot in [1, 2, 3, 5, 10, 15, 20, 30]:  # FIXME:
         print(">>> keepclasses={},  shot={}".format(keepclasses, shot))
 
         since = time.time()
