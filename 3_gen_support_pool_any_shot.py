@@ -99,6 +99,7 @@ def vis_image(im, bboxs, im_name):
 
 
 def crop_support(img, bbox):
+
     image_shape = img.shape[:2]  # h, w
     data_height, data_width = image_shape
 
@@ -111,7 +112,7 @@ def crop_support(img, bbox):
 
     width = x2 - x1
     height = y2 - y1
-    context_pixel = 16  # int(16 * im_scale)
+    context_pixel = 2  # FIXME: make surrounding smaller???
 
     new_x1 = 0
     new_y1 = 0
@@ -119,7 +120,7 @@ def crop_support(img, bbox):
     new_y2 = height
     target_size = (320, 320)  # (384, 384)
 
-    if width >= height:
+    if width >= height:  # landscape
         crop_x1 = x1 - context_pixel
         crop_x2 = x2 + context_pixel
 
