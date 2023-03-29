@@ -111,6 +111,7 @@ MVTECVOC_ALL_CATEGORIES = {
         "long_screw",
         "washer",
         "screw_nut",
+        "tools_bag",
     ],
     "splicing_connectors": [
         "aeroplane",
@@ -169,6 +170,7 @@ MVTECVOC_NOVEL_CATEGORIES = {
         "long_screw",
         "washer",
         "screw_nut",
+        "tools_bag",
     ],
     "splicing_connectors": [
         "clamp_2",
