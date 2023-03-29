@@ -69,7 +69,7 @@ PathManager.register_handler(Detectron2Handler())
 PathManager.register_handler(FsDetHandler())
 
 
-VOC_CLASSES = [
+MVTECVOC_CLASSES = [
     "aeroplane",
     "bicycle",
     "bird",
@@ -98,6 +98,7 @@ VOC_CLASSES = [
     "long_screw",
     "washer",
     "screw_nut",
+    "tools_bag",
     "pushpin",
     "clamp_2",
     "cable_yellow",
@@ -112,7 +113,7 @@ VOC_CLASSES = [
     "juice_cherry",
     "label_cherry",
     "label_100",
-    # FIXME[DONE]: update (append instead of replacing)
+    # FIXME: update (append instead of replacing)
 ]
 
 
@@ -127,7 +128,7 @@ def parse_args():
 
 def generate_seeds():
     data = []
-    data_per_cat = {c: [] for c in VOC_CLASSES}
+    data_per_cat = {c: [] for c in MVTECVOC_CLASSES}
 
     with PathManager.open("datasets/mvtecvoc/ImageSets/Main/trainval.txt") as f:
         fileids = np.loadtxt(f, dtype=np.str).tolist()
