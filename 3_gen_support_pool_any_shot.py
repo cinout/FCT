@@ -22,6 +22,7 @@ import shutil
 import sys
 import xml.etree.ElementTree as ET
 
+# FIXME: update
 MVTECVOC_ALL_CATEGORIES = [
     "aeroplane",
     "bicycle",
@@ -43,7 +44,6 @@ MVTECVOC_ALL_CATEGORIES = [
     # "cow",
     # "motorbike",
     # "sofa",
-    # FIXME[DONE]: update
     "nectarine",
     "orange",
     "cereal",
@@ -52,6 +52,7 @@ MVTECVOC_ALL_CATEGORIES = [
     "long_screw",
     "washer",
     "screw_nut",
+    "tools_bag",
     "pushpin",
     "clamp_2",
     "cable_yellow",
