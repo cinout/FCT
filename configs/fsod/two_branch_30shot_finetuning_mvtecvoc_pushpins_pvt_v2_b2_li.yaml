@@ -2,7 +2,7 @@ _BASE_: "Base-FSOD-C4.yaml"
 MODEL:
   PIXEL_MEAN: [103.530, 116.280, 123.675]
   PIXEL_STD: [57.375, 57.120, 58.395]
-  WEIGHTS: "./output/fsod/two_branch_5shot_finetuning_mvtecvoc_screw_bag_pvt_v2_b2_li/model_final.pth"
+  WEIGHTS: "./output/fsod/two_branch_training_pascalvoc_split1_pvt_v2_b2_li/model_final.pth"
   MASK_ON: False
   RESNETS:
     DEPTH: 101
@@ -17,8 +17,8 @@ MODEL:
     PRE_NMS_TOPK_TEST: 12000
     POST_NMS_TOPK_TEST: 100
 DATASETS:
-  TRAIN: ("screw_bag_mvtecvoc_trainval_all_5shot",) #FIXME[DONE]:
-  TEST: ("mvtecvoc_test_all_screw_bag",) #FIXME[DONE]:
+  TRAIN: ("pushpins_mvtecvoc_trainval_all_30shot",) #FIXME[DONE]:
+  TEST: ("mvtecvoc_test_all_pushpins",) #FIXME[DONE]:
   TEST_KEEPCLASSES: "all"
 SOLVER:
   IMS_PER_BATCH: 8
@@ -30,12 +30,12 @@ SOLVER:
 INPUT:
   FS:
     FEW_SHOT: True
-    SUPPORT_WAY: 5
-    SUPPORT_SHOT: 5 #FIXME[DONE]:
+    SUPPORT_WAY: 3
+    SUPPORT_SHOT: 30 #FIXME[DONE]:
   MIN_SIZE_TRAIN: (480, 512, 544, 576, 608, 640, 672, 704, 736, 768, 800)
   MAX_SIZE_TRAIN: 1333
   MIN_SIZE_TEST: 600
   MAX_SIZE_TEST: 1000
-OUTPUT_DIR: "./output/fsod/two_branch_5shot_finetuning_mvtecvoc_screw_bag_pvt_v2_b2_li"
+OUTPUT_DIR: "./output/fsod/two_branch_30shot_finetuning_mvtecvoc_pushpins_pvt_v2_b2_li"
 TEST:
   EVAL_PERIOD: 5000
