@@ -120,10 +120,6 @@ def load_filtered_mvtecvoc_instances(
                     break
             # if len(dicts_) > int(shot):
             #     dicts_ = np.random.choice(dicts_, int(shot), replace=False)
-            print("===========cls===============")
-            print(cls)
-            print("===========dicts_==============")
-            print(dicts_)
             dicts.extend(dicts_)
     else:
         if name.startswith("mvtecvoc_test_all"):  # FIXME[DONE]: update
